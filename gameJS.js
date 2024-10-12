@@ -17,7 +17,7 @@ const car = {
 let walls = [];
 const wallWidth = 100;
 const wallHeight = 20;
-const wallSpeed = 3;
+const wallSpeed = 5;
 
 // Game variables
 let score = 0;
@@ -45,7 +45,7 @@ function updateGame() {
     drawCar();
     checkCollisions();
     updateScore();
-    document.getElementById('score').innerText = `Score: ${score}`;
+    document.getElementById('score').innerText = `Score: ${Math.floor(score)}`;
 }
 
 // Move walls
@@ -96,7 +96,7 @@ function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// Handle car movement
+// Handle car movement with keyboard
 window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft' && car.x > 0) {
         car.x -= car.speed;
@@ -104,6 +104,31 @@ window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight' && car.x < canvas.width - car.width) {
         car.x += car.speed;
     }
+});
+
+// Handle car movement with touch
+canvas.addEventListener('touchstart', (e) => {
+    const touchX = e.touches[0].clientX;
+    
+    // Move car based on where the user touched (left or right side of the screen)
+    if (touchX < canvas.width / 2) {
+        car.x -= car.speed * 5; // Move left
+    } else {
+        car.x += car.speed * 5; // Move right
+    }
+});
+
+canvas.addEventListener('touchmove', (e) => {
+    const touchX = e.touches[0].clientX;
+
+    // Move the car to follow the finger's position
+    car.x = touchX - car.width / 2;
+
+    // Prevent the car from going off the screen
+    if (car.x < 0) car.x = 0;
+    if (car.x > canvas.width - car.width) car.x = canvas.width - car.width;
+
+    e.preventDefault(); // Prevent scrolling while playing
 });
 
 // End game
