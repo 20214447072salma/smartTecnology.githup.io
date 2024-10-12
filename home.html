@@ -1,45 +1,10 @@
 <html>
 	<head>
-		<title>section 8 Task</title>
-		<style>
-			body{background-color:rgb(189, 217, 252);}
-			.d {
-				color: cornsilk;
-				text-decoration: none;
-				font-family: sans-serif;
-				font-size: 30px;
-				margin: 20px;
-			}
-		</style>
+		<title>Top Team</title>
+		<link rel="icon" type="text/css" href="logo.ico">
+		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
-	<body>
-		<script>
-			function Bill()
-			{
-				x = parseInt( document.o.n1.value)
-
-				if( document.o.op.value == 1 )
-					document.o.result.value = (10+0.01)*x
-				
-				else if( document.o.op.value == 2)
-					document.o.result.value = (50+0.2)*x
-
-				else
-					document.o.result.value = (75+0.5)*x
-			}
-		</script>
-		<form name="o" class="d">
-			Enter the number of Kilowatt: <input type="text" name="n1"> <br>
-
-			Select an operation: <select name="op">
-				<option value="1">R</option>
-				<option value="2">C</option>
-				<option value="3">L</option> 
-			</select> <br>
-
-			<input type="button" value="calculate bill" onclick="Bill()"> <br>
-			Result: <input type="text" name="result" disabled>
-
-		</form>
+	<body class='it'>
+        <a href="play.html" class="active">Play</a>
 	</body>
 </html>
