@@ -17,7 +17,7 @@ const car = {
 let walls = [];
 const wallWidth = 100;
 const wallHeight = 20;
-const wallSpeed = 5;
+const wallSpeed = 10;
 
 // Game variables
 let score = 0;
