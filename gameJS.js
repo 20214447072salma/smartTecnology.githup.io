@@ -22,19 +22,31 @@ const wallSpeed = 10;
 // Game variables
 let score = 0;
 let totalScore = 0;
-let collisionPenalty = -5;
+let collisionPenalty = -20;
 let scoreIncrease = 10;
 let gameInterval, wallInterval;
+
+const images = new Image();
+images.src = 'images/robotLeft.png';
+images.src = 'images/robotRight.png';
+images.src = 'images/wall.png';
 
 // Start game
 function startGame() {
     gameInterval = setInterval(updateGame, 1000 / 60); // Update the game 60 times per second
-    wallInterval = setInterval(createWall, 2000); // Create new walls every 2 seconds
+    wallInterval = setInterval(createWall, 500); // Create new walls every 0.5 seconds
 }
 
 // Create walls
 function createWall() {
-    let wallX = Math.random() * (canvas.width - wallWidth);
+    /* 
+        the position of the wall in the screen is in random position
+        random to get random position * canvas W - wallWidth to suggest
+        number in the range of window size :) easy
+    */
+    let wallX = Math.random() * (canvas.width - wallWidth);  
+
+    // move only in x-axis
     walls.push({ x: wallX, y: 0 });
 }
 
@@ -67,8 +79,13 @@ function drawCar() {
 
 // Draw wall
 function drawWall(wall) {
-    ctx.fillStyle = 'red';
-    ctx.fillRect(wall.x, wall.y, wallWidth, wallHeight);
+    if (wallImage.complete) {  // Check if the image is loaded
+        ctx.drawImage(wallImage, wall.x, wall.y, wallWidth, wallHeight);
+    } else {
+        // Draw the rectangle as a fallback while the image is loading
+        ctx.fillStyle = 'red';
+        ctx.fillRect(wall.x, wall.y, wallWidth, wallHeight);
+    }
 }
 
 // Check for collisions
@@ -145,4 +162,3 @@ setTimeout(endGame, 30000);
 
 // Start the game
 startGame();
-
