@@ -29,7 +29,7 @@ let gameInterval, wallInterval;
 const images = new Image();
 images.src = 'robotLeft.png';
 images.src = 'robotRight.png';
-images.src = 'wall.png';
+images.src = 'wall.png?v=1';
 
 // Start game
 function startGame() {
@@ -79,9 +79,9 @@ function drawCar() {
 
 // Draw wall
 function drawWall(wall) {
-    // if (wallImage.complete) {  // Check if the image is loaded
-    //     ctx.drawImage(wallImage, wall.x, wall.y, wallWidth, wallHeight);
-    // } else {
+    if (wallImage.complete) {  // Check if the image is loaded
+        ctx.drawImage(wallImage, wall.x, wall.y, wallWidth, wallHeight);
+    } else {
         // Draw the rectangle as a fallback while the image is loading
         ctx.fillStyle = 'red';
         ctx.fillRect(wall.x, wall.y, wallWidth, wallHeight);
