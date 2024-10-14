@@ -26,10 +26,8 @@ let collisionPenalty = -20;
 let scoreIncrease = 10;
 let gameInterval, wallInterval;
 
-const images = new Image();
-images.src = 'images/robotLeft.png';
-images.src = 'images/robotRight.png';
-images.src = './images/wall.png';
+const wallImage = new Image();
+wallImage.src = './images/wall.png';
 
 // Start game
 function startGame() {
