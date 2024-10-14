@@ -29,7 +29,7 @@ let gameInterval, wallInterval;
 const images = new Image();
 images.src = 'images/robotLeft.png';
 images.src = 'images/robotRight.png';
-images.src = './main/wall.png';
+images.src = 'wall.png';
 
 // Start game
 function startGame() {
