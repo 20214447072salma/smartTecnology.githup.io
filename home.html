@@ -1,41 +1,152 @@
-<html>
-	<head>
-		<title>Top Team</title>
-		<link rel="icon" type="text/css" href="logo.ico">
-		<link rel="stylesheet" type="text/css" href="style.css">
-	</head>
-	<body class='it'>
-        <!-- <a href="play.html" class="active">Play</a> -->
-		 <div class="navigation">
-			<ul>
-				<li class="list">
-					<a href="play.html">
-						<span class="icon"></span>
-						<span class="text">Home</span>
-					</a>
-				</li>
+@import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
 
-				<li class="list">
-					<a href="#">
-						<span class="icon"></span>
-						<span class="text">Tasks</span>
-					</a>
-				</li>
 
-				<li class="list">
-					<a href="#">
-						<span class="icon"></span>
-						<span class="text">Freids</span>
-					</a>
-				</li>
+*{	
+    /*
+     margin and padding to remove the points of list items then list then 
+     at the border of the screen
+    */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Abel", sans-serif;
+}
 
-				<li class="list">
-					<a href="#">
-						<span class="icon"></span>
-						<span class="text">Reservation</span>
-					</a>
-				</li>
-			</ul>
-		 </div>
-	</body>
-</html>
+:root {
+    /* 
+     inside root creating a gobal variable store a colors styling here
+    */
+    --clr: #222327
+}
+
+header {
+    display: flex;              /* Displays an element as a block-level flex container */
+    justify-content: center;    /* Items are positioned in the center of the container {empty blocks} */
+    align-items: center;        /* Items are positioned at the center of the container {text blocks} */
+    min-height: 100vh;
+    background: var(--clr);
+}
+
+body {
+    background-color: var(--clr);
+}
+
+.navigation {
+    width: 400px;
+    height: 80px;
+    background: #fff;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.navigation ul {
+    display: flex;            /*item list in one raw */
+    width: 70%;
+    align-items: center; /* Add this for proper alignment */
+}
+
+.navigation ul li {
+    position: relative;      /* remove the point of list item */
+    list-style: none;         
+    width: 70px;
+    height: 70px;
+    z-index: 1;
+}
+
+.navigation ul li a {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;    /* icon and title in the same column */
+    width: 100%;
+    text-align: center;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.navigation ul li a .icon {
+    position: relative;
+    display: block;
+    line-height: 75px;
+    font-size: 1.5em;
+    text-align: center;
+    transition: 0.5s;
+    color: var(--clr);
+}
+
+.navigation ul li.active a .icon {
+    transform: translateY(-20px);
+    color: #fff;
+}
+
+.navigation ul li a .text {
+    /* position: absolute; */
+
+    color: var(--clr);
+    font-weight: 400;
+    font-size: 0.75em;
+    letter-spacing: 0.05em;
+    transition: 0.5s;
+}
+
+.navigation ul li.active a .text {
+    transform: translateY(10px);
+    color: #89C83C;
+    font-weight: bold;
+}
+
+.indicator {
+    position: absolute;
+    /* left: 20px; */
+    top: -50%;
+    width: 70px;
+    height: 70px;
+    background: #89C83C;
+    border-radius: 50%;
+    border: 6px solid var(--clr);
+    transition: 0.5s;
+}
+
+.indicator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -22px;
+    width: 20px;
+    height: 20px;
+    /* background: #f00; */
+    border-top-right-radius: 25px;
+    box-shadow: 1px -10px 0 0 var(--clr);
+}
+
+.indicator::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -22px;
+    width: 20px;
+    height: 20px;
+    /* background: #f00; */
+    border-top-left-radius: 25px;
+    box-shadow: -1px -10px 0 0 var(--clr);
+}
+
+.navigation ul li:nth-child(1).active ~ .indicator {
+    transform: translateX(calc(70px * 0));
+}
+
+.navigation ul li:nth-child(2).active ~ .indicator {
+    transform: translateX(calc(70px * 1));
+}
+
+.navigation ul li:nth-child(3).active ~ .indicator {
+    transform: translateX(calc(70px * 2));
+}
+
+.navigation ul li:nth-child(4).active ~ .indicator {
+    transform: translateX(calc(70px * 3));
+}
