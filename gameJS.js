@@ -77,13 +77,13 @@ function drawCar() {
 
 // Draw wall
 function drawWall(wall) {
-    if (wallImage.complete) {  // Check if the image is loaded
-        ctx.drawImage(wallImage, wall.x, wall.y, wallWidth, wallHeight);
-    } else {
+    // if (wallImage.complete) {  // Check if the image is loaded
+    //     ctx.drawImage(wallImage, wall.x, wall.y, wallWidth, wallHeight);
+    // } else {
         Draw the rectangle as a fallback while the image is loading
         ctx.fillStyle = 'red';
         ctx.fillRect(wall.x, wall.y, wallWidth, wallHeight);
-    }
+    // }
 }
 
 // Check for collisions
