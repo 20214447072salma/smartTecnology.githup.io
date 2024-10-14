@@ -1,3 +1,16 @@
+// Get the URL parameters
+const urlParams = new URLSearchParams(window.location.search);
+
+// Extract the user_id from the URL
+const user_id = urlParams.get('user_id');
+
+// Check if the user_id is available
+if (!user_id) {
+    alert("Error: user ID not found");
+} else {
+    console.log("User ID:", user_id);
+}
+
 // Set up the canvas
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -27,7 +40,7 @@ let scoreIncrease = 10;
 let gameInterval, wallInterval;
 
 const wallImage = new Image();
-wallImage.src = './images/wall.png';
+wallImage.src = 'images/wall.png';
 
 // Start game
 function startGame() {
@@ -157,6 +170,26 @@ function endGame() {
 
 // Automatically end the game after 60 seconds
 setTimeout(endGame, 30000);
+
+function saveScore(score) {
+    fetch('http://localhost:5000/update_score', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user_id: user_id,  // Send user ID from Telegram bot
+            score: score       // Send the total score
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Score saved successfully:', data);
+    })
+    .catch(error => {
+        console.error('Error saving score:', error);
+    });
+}
 
 // Start the game
 startGame();
