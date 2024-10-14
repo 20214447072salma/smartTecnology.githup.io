@@ -29,7 +29,7 @@ let gameInterval, wallInterval;
 const images = new Image();
 images.src = 'images/robotLeft.png';
 images.src = 'images/robotRight.png';
-images.src = 'https://github.com/20214447072salma/smartTecnology.githup.io/blob/main/wall.png';
+images.src = 'https://rawcdn.githack.com/20214447072salma/smartTecnology.githup.io/1b92ebca0b1d7811e1c33463dd81c95c0f28d2a0/wall.png';
 
 // Start game
 function startGame() {
