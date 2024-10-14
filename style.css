@@ -22,7 +22,7 @@
 header {
     display: flex;              /* Displays an element as a block-level flex container */
     justify-content: center;    /* Items are positioned in the center of the container {empty blocks} */
-    align-items: center;        /* Items are positioned at the center of the container {text blocks} */
+    align-items: flex-end;        /* Items are positioned at the center of the container {text blocks} */
     min-height: 100vh;
     background: var(--clr);
 }
