@@ -8,7 +8,7 @@ const user_id = urlParams.get('user_id');
 if (!user_id) {
     alert("Error: user ID not found");
 } else {
-    console.log("User ID:", user_id);
+    alert("success: user ID found");
 }
 
 // Set up the canvas
