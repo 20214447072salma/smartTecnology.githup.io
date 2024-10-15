@@ -174,7 +174,7 @@ setTimeout(endGame, 30000);
 function saveScore(score) {
     alert(`Score: ${score}`);
     alert(`userid: ${user_id}`);
-    
+
     fetch('http://127.0.0.1:8081/update_score', {
         method: 'POST',
         headers: {
@@ -187,11 +187,12 @@ function saveScore(score) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Score saved successfully:', data);
+        alert('Score saved successfully: ' + JSON.stringify(data));
     })
     .catch(error => {
-        console.error('Error saving score:', error);
+        alert('error saving score: ' + JSON.stringify(error));
     });
+    alert("done");
 }
 
 // Start the game
