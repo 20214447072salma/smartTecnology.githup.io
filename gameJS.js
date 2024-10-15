@@ -192,11 +192,6 @@ function saveScore(score) {
     .catch(error => {
         alert('error saving score: ' + JSON.stringify(error));
     });
-
-    // Update the database (ensure this is within the `saveScore` function)
-    const query = `UPDATE user_info SET score = score + ${score} WHERE user_id = ${user_id};`;
-    db_cursor.execute(query);
-    db_connection.commit();
     
     alert("done");
 }
