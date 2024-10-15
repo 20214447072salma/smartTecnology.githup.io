@@ -181,18 +181,22 @@ function saveScore(score) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            user_id: user_id,  // Send user ID from Telegram bot
-            score: score       // Send the total score
+            user_id: user_id,  // Make sure user_id is defined in your scope
+            score: score       // Ensure score is passed correctly
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         alert('Score saved successfully: ' + JSON.stringify(data));
     })
     .catch(error => {
-        alert('error saving score: ' + JSON.stringify(error));
+        alert('Error saving score: ' + error.message);
     });
-    
     alert("done");
 }
 
