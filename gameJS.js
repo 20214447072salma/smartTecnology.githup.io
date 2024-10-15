@@ -172,7 +172,7 @@ function endGame() {
 setTimeout(endGame, 30000);
 
 function saveScore(score) {
-    fetch('http://localhost:8081/update_score', {
+    fetch('http://localhost:8081/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
