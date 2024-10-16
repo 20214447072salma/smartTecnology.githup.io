@@ -23,6 +23,17 @@
     </style>
 </head>
 <body>
+    <form id="scoreForm">
+      <button type="button" onclick="saveScore(100)">Save Score</button>
+    </form>
+    
+    <script>
+        document.getElementById('scoreForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent the form from submitting with GET
+            saveScore(100);  // Call your saveScore function
+        });
+    </script>
+
     <div id="score">Score: 0</div>
     <canvas id="gameCanvas"></canvas>
     <script src="gameJS.js"></script>
