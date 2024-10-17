@@ -192,9 +192,3 @@ function saveScore(score) {
 
 // Start the game
 startGame();
-
-// Add event listener for end game button
-document.getElementById('endGameButton').addEventListener('click', (event) => {
-    event.preventDefault(); // Prevent any default button action
-    endGame(); // Call your end game function
-});
