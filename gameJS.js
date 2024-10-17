@@ -165,7 +165,7 @@ function saveScore(score) {
     alert(`Score: ${score}`);
     alert(`userid: ${user_id}`);
 
-    fetch('http://127.0.0.1:8081/update_score', {
+    fetch('http://192.168.1.2:8081/update_score', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
