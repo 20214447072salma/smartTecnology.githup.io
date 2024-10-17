@@ -161,24 +161,34 @@ function endGame() {
 setTimeout(endGame, 30000);
 
 // Save score to the server
-function saveScore(user_id, score) {
+function saveScore(score) {
     alert(`Score: ${score}`);
     alert(`userid: ${user_id}`);
-    axios.post('http://127.0.0.1:8081/update_score', {
-    user_id: user_id,  // user_id should be defined in your scope
-    score: score       // score should be passed correctly
+
+    fetch('http://127.0.0.1:8081/update_score', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user_id: user_id,  // Make sure user_id is defined in your scope
+            score: score       // Ensure score is passed correctly
+        })
     })
     .then(response => {
-        console.log('Score saved successfully:', response.data);
-        alert('Score saved successfully: ' + JSON.stringify(response.data));
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert('Score saved successfully: ' + JSON.stringify(data));
     })
     .catch(error => {
-        console.error('Error saving score:', error);
         alert('Error saving score: ' + error.message);
     });
     alert("done");
 }
-
 
 // Start the game
 startGame();
