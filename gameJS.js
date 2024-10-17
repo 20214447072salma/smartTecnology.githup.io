@@ -1,4 +1,4 @@
-// Get the URL parameters
+// Get the URL parameters 
 const urlParams = new URLSearchParams(window.location.search);
 
 // Extract the user_id from the URL
@@ -8,7 +8,7 @@ const user_id = urlParams.get('user_id');
 if (!user_id) {
     alert("Error: user ID not found");
 } else {
-    alert("success: user ID found");
+    alert("Success: user ID found");
 }
 
 // Set up the canvas
@@ -50,14 +50,7 @@ function startGame() {
 
 // Create walls
 function createWall() {
-    /* 
-        the position of the wall in the screen is in random position
-        random to get random position * canvas W - wallWidth to suggest
-        number in the range of window size :) easy
-    */
-    let wallX = Math.random() * (canvas.width - wallWidth);  
-
-    // move only in x-axis
+    let wallX = Math.random() * (canvas.width - wallWidth);
     walls.push({ x: wallX, y: 0 });
 }
 
@@ -93,7 +86,6 @@ function drawWall(wall) {
     if (wallImage.complete) {  // Check if the image is loaded
         ctx.drawImage(wallImage, wall.x, wall.y, wallWidth, wallHeight);
     } else {
-        // Draw the rectangle as a fallback while the image is loading
         ctx.fillStyle = 'red';
         ctx.fillRect(wall.x, wall.y, wallWidth, wallHeight);
     }
@@ -138,7 +130,6 @@ window.addEventListener('keydown', (e) => {
 canvas.addEventListener('touchstart', (e) => {
     const touchX = e.touches[0].clientX;
     
-    // Move car based on where the user touched (left or right side of the screen)
     if (touchX < canvas.width / 2) {
         car.x -= car.speed * 5; // Move left
     } else {
@@ -149,10 +140,8 @@ canvas.addEventListener('touchstart', (e) => {
 canvas.addEventListener('touchmove', (e) => {
     const touchX = e.touches[0].clientX;
 
-    // Move the car to follow the finger's position
     car.x = touchX - car.width / 2;
-
-    // Prevent the car from going off the screen
+    
     if (car.x < 0) car.x = 0;
     if (car.x > canvas.width - car.width) car.x = canvas.width - car.width;
 
@@ -168,12 +157,13 @@ function endGame() {
     saveScore(totalScore); // Save the score to the database
 }
 
-// Automatically end the game after 60 seconds
+// Automatically end the game after 30 seconds
 setTimeout(endGame, 30000);
 
+// Save score to the server
 function saveScore(score) {
     alert(`Score: ${score}`);
-    alert(`userid: ${user_id}`);
+    alert(`User ID: ${user_id}`);
 
     fetch('http://127.0.0.1:8081/update_score', {
         method: 'POST',
@@ -181,8 +171,8 @@ function saveScore(score) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            user_id: user_id,  // Make sure user_id is defined in your scope
-            score: score       // Ensure score is passed correctly
+            user_id: user_id,
+            score: score
         })
     })
     .then(response => {
@@ -197,9 +187,14 @@ function saveScore(score) {
     .catch(error => {
         alert('Error saving score: ' + error.message);
     });
-    alert("done");
+    alert("Done");
 }
-
 
 // Start the game
 startGame();
+
+// Add event listener for end game button
+document.getElementById('endGameButton').addEventListener('click', (event) => {
+    event.preventDefault(); // Prevent any default button action
+    endGame(); // Call your end game function
+});
