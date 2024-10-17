@@ -171,34 +171,23 @@ function endGame() {
 // Automatically end the game after 60 seconds
 setTimeout(endGame, 30000);
 
-function saveScore(score) {
-    alert(`Score: ${score}`);
-    alert(`userid: ${user_id}`);
-
-    fetch('http://127.0.0.1:8081/update_score', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            user_id: user_id,  // Make sure user_id is defined in your scope
-            score: score       // Ensure score is passed correctly
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert('Score saved successfully: ' + JSON.stringify(data));
-    })
-    .catch(error => {
-        alert('Error saving score: ' + error.message);
-    });
-    alert("done");
+fasync function saveScore(user_id, score) {
+    try {
+        const response = await axios.post("http://127.0.0.1:8081/update_score", {
+            user_id: user_id,
+            score: score
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        console.log(response.data);
+    } catch (error) {
+        console.error("Error in saveScore:", error);
+    }
 }
+
 
 // Start the game
 startGame();
