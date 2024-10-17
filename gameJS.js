@@ -162,27 +162,21 @@ setTimeout(endGame, 30000);
 
 // Save score to the server
 function saveScore(user_id, score) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://127.0.0.1:8081/update_score', true);
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {  // Request is done
-            if (xhr.status === 200) {  // Status is OK
-                var response = JSON.parse(xhr.responseText);
-                alert('Score saved successfully: ' + JSON.stringify(response));
-            } else {
-                alert('Error saving score: ' + xhr.status);
-            }
-        }
-    };
-
-    var data = JSON.stringify({
-        user_id: user_id,
-        score: score
+    alert(`Score: ${score}`);
+    alert(`userid: ${user_id}`);
+    axios.post('http://127.0.0.1:8081/update_score', {
+    user_id: user_id,  // user_id should be defined in your scope
+    score: score       // score should be passed correctly
+    })
+    .then(response => {
+        console.log('Score saved successfully:', response.data);
+        alert('Score saved successfully: ' + JSON.stringify(response.data));
+    })
+    .catch(error => {
+        console.error('Error saving score:', error);
+        alert('Error saving score: ' + error.message);
     });
-
-    xhr.send(data);
+    alert("done");
 }
 
 
