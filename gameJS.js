@@ -4,7 +4,7 @@ const urlParams = new URLSearchParams(window.location.search);
 // Extract the user_id from the URL
 const user_id = urlParams.get('user_id');
 
-Check if the user_id is available
+// Check if the user_id is available
 if (!user_id) {
     alert("Error: user ID not found");
 } else {
