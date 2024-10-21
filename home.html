@@ -72,7 +72,7 @@
         const user_id = urlParams.get('user_id');
 
         // Attach click event to the Play button
-        document.getElementById('playButton').addEventListener('click', function () {
+        document.getElementById('button').addEventListener('click', function () {
             if (user_id) {
                 // Redirect to play.html with the user_id
                 window.location.href = `play.html?user_id=${user_id}`;
