@@ -1,69 +1,75 @@
-<html>
-	<head>
-		<title>Robotics Club</title>
-		<link rel="icon" type="text/css" href="logo.ico">
-		<link rel="stylesheet" type="text/css" href="style.css">
-	</head>
-	<body>
-        <a href="play.html" class="button">Play</a>
-		<header>
-			<div class="navigation">
-				<ul>
-					<li class="list active">
-						<a href="home.html">
-							<span class="icon">
-								<ion-icon name="home"></ion-icon>
-							</span>
-							<span class="text">Home</span>
-						</a>
-					</li>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robotics Club</title>
+    <link rel="icon" type="text/css" href="logo.ico">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Button to Play -->
+    <a href="play.html" class="button">Play</a>
 
-					<li class="list">
-						<a href="#">
-							<span class="icon">
-								<ion-icon name="clipboard"></ion-icon>
-							</span>
-							<span class="text">Tasks</span>
-						</a>
-					</li>
+    <!-- Navigation Menu -->
+    <header>
+        <div class="navigation">
+            <ul>
+                <li class="list active">
+                    <a href="home.html">
+                        <span class="icon">
+                            <ion-icon name="home"></ion-icon>
+                        </span>
+                        <span class="text">Home</span>
+                    </a>
+                </li>
 
-					<li class="list">
-						<a href="#">
-							<span class="icon">
-								<ion-icon name="people"></ion-icon>
-							</span>
-							<span class="text">frens</span>
-						</a>
-					</li>
+                <li class="list">
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="clipboard"></ion-icon>
+                        </span>
+                        <span class="text">Tasks</span>
+                    </a>
+                </li>
 
-					<li class="list">
-						<a href="#">
-							<span class="icon">
-								<ion-icon name="wallet"></ion-icon>
-							</span>
-							<span class="text">book</span>
-						</a>
-					</li>
+                <li class="list">
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="people"></ion-icon>
+                        </span>
+                        <span class="text">Friends</span>
+                    </a>
+                </li>
 
-					<div class="indicator"></div>
+                <li class="list">
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="wallet"></ion-icon>
+                        </span>
+                        <span class="text">Book</span>
+                    </a>
+                </li>
 
-				</ul>
-			</div>
-		</header>
-		<script>
-			const list = document.querySelectorAll('.list');
-			function activeLink(){
-				list.forEach((item) =>
-					item.classList.remove('active'));
-					this.classList.add('active');
-			}
-			list.forEach((item) => 
-			item.addEventListener('click', activeLink));
-		</script>
+                <!-- Indicator -->
+                <div class="indicator"></div>
+            </ul>
+        </div>
+    </header>
 
-<!-- here to add an icon for each tool in the navigation menu -->
-		<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-		<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- JavaScript for Active Link -->
+    <script>
+        const list = document.querySelectorAll('.list');
+        function activeLink() {
+            list.forEach((item) => item.classList.remove('active'));
+            this.classList.add('active');
+        }
+        list.forEach((item) => item.addEventListener('click', activeLink));
+    </script>
 
-	</body>
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
 </html>
