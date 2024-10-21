@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Avoidance Game</title>
+    <title>basket Avoidance Game</title>
     <style>
         body {
             margin: 0;
@@ -26,5 +26,18 @@
     <div id="score">Score: 0</div>
     <canvas id="gameCanvas"></canvas>
     <script src="gameJS.js"></script>
+    <script>
+        // Get the user_id from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const user_id = urlParams.get('user_id');
+
+        if (!user_id) {
+            alert("Error: User ID not found");
+        }
+
+        // Now the user_id is available in the play.html file
+        // You can use it when the game ends to send the score to the server
+        // For example: saveScore(user_id, score);
+    </script>
 </body>
 </html>
