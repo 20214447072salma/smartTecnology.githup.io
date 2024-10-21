@@ -10,7 +10,7 @@
 </head>
 <body>
     <!-- Button to Play -->
-    <a href="play.html" class="button">Play</a>
+    <button id="playButton" class="button">Play</button>
 
     <!-- Navigation Menu -->
     <header>
@@ -72,11 +72,11 @@
         const user_id = urlParams.get('user_id');
 
         // Attach click event to the Play button
-        document.getElementById('button').addEventListener('click', function () {
+        document.getElementById('playButton').addEventListener('click', function () {
             if (user_id) {
                 // Redirect to play.html with the user_id
                 window.location.href = `play.html?user_id=${user_id}`;
-                alert("user ID found");
+                alert("found");
             } else {
                 alert("Error: user ID not found.");
             }
