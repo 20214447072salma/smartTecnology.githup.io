@@ -1,14 +1,15 @@
-// Get the URL parameters 
+// Get the URL parameters
 const urlParams = new URLSearchParams(window.location.search);
 
 // Extract the user_id from the URL
 const user_id = urlParams.get('user_id');
 
-// Check if the user_id is available
+Check if the user_id is available
 if (!user_id) {
     alert("Error: user ID not found");
 } else {
-    alert("Success: user ID found");
+    alert("success: user ID found");
+
 }
 
 // Set up the canvas
@@ -17,30 +18,35 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Car properties
-const car = {
-    width: 50,
+// basket properties
+const basket = {
+    width: 100,
     height: 100,
     x: canvas.width / 2 - 25,
-    y: canvas.height - 120,
+    y: canvas.height - 100,
     speed: 8
 };
 
 // Wall properties
 let walls = [];
-const wallWidth = 100;
+const wallWidth  = 100;
 const wallHeight = 20;
-const wallSpeed = 10;
+const wallSpeed  = 10;
 
 // Game variables
-let score = 0;
-let totalScore = 0;
-let collisionPenalty = -20;
-let scoreIncrease = 10;
+let score         = 0;
+let totalScore    = 0;
+let collision     = 5;
+let scoreIncrease = 1;
+let out           = -5;
 let gameInterval, wallInterval;
 
+// Images of the game 
 const wallImage = new Image();
 wallImage.src = 'images/wall.png';
+
+const basketImage = new Image();
+basketImage.src = 'images/basket.png';
 
 // Start game
 function startGame() {
@@ -50,7 +56,14 @@ function startGame() {
 
 // Create walls
 function createWall() {
-    let wallX = Math.random() * (canvas.width - wallWidth);
+    /* 
+        the position of the wall in the screen is in random position
+        random to get random position * canvas W - wallWidth to suggest
+        number in the range of window size :) easy
+    */
+    let wallX = Math.random() * (canvas.width - wallWidth);  
+
+    // move only in x-axis
     walls.push({ x: wallX, y: 0 });
 }
 
@@ -58,8 +71,9 @@ function createWall() {
 function updateGame() {
     clearCanvas();
     moveWalls();
-    drawCar();
-    checkCollisions();
+    drawBasket();
+    checkCollisionsAndBounds(); // Check for collisions
+    // checkOutOfBounds(); // Check if walls are out of bounds
     updateScore();
     document.getElementById('score').innerText = `Score: ${Math.floor(score)}`;
 }
@@ -70,38 +84,60 @@ function moveWalls() {
         wall.y += wallSpeed;
         if (wall.y > canvas.height) {
             walls.splice(index, 1);
+            score += out;
         }
         drawWall(wall);
     });
 }
 
-// Draw car
-function drawCar() {
-    ctx.fillStyle = 'blue';
-    ctx.fillRect(car.x, car.y, car.width, car.height);
+// Draw basket
+function drawBasket() {
+    if(basketImage.complete) { 
+        // Check if the image is loaded
+        ctx.drawImage(basketImage, basket.x, basket.y, basket.width, basket.height);
+    } else { 
+        // Draw the rectange as a fallback while the image is loading 
+        ctx.fillStyle = 'brawn';
+        ctx.fillRect(basket.x, basket.y, basket.width, basket.height);
+    } 
 }
 
 // Draw wall
 function drawWall(wall) {
-    if (wallImage.complete) {  // Check if the image is loaded
+    if (wallImage.complete) {  
+        // Check if the image is loaded
         ctx.drawImage(wallImage, wall.x, wall.y, wallWidth, wallHeight);
     } else {
+        // Draw the rectangle as a fallback while the image is loading
         ctx.fillStyle = 'red';
         ctx.fillRect(wall.x, wall.y, wallWidth, wallHeight);
     }
 }
 
-// Check for collisions
-function checkCollisions() {
-    walls.forEach((wall) => {
+// Check for collisions and out of bounds walls
+function checkCollisionsAndBounds() {
+    walls.forEach((wall, index) => {
+        // Check for collision with the basket
         if (
-            car.x < wall.x + wallWidth &&
-            car.x + car.width > wall.x &&
-            car.y < wall.y + wallHeight &&
-            car.y + car.height > wall.y
+            basket.x < wall.x + wallWidth &&
+            basket.x + basket.width > wall.x &&
+            basket.y < wall.y + wallHeight &&
+            basket.y + basket.height > wall.y
         ) {
-            score += collisionPenalty; // Deduct points for collisions
-            wall.y = canvas.height + 1; // Move the wall off-screen after collision
+            // Increase score for collision
+            score += collision;
+            walls.splice(index, 1); // Remove the wall after collision
+        }
+    });
+}
+
+function checkOutOfBounds() {
+    walls.forEach((wall, index) => {
+        // Check if the wall has moved off the bottom of the screen
+        if (wall.y > canvas.height) {
+            // Decrease score if the wall passes out of the screen without collision
+            score += out;
+            walls.splice(index, 1); // Remove the wall once it goes out of the screen
         }
     });
 }
@@ -116,34 +152,37 @@ function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// Handle car movement with keyboard
+// Handle basket movement with keyboard
 window.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft' && car.x > 0) {
-        car.x -= car.speed;
+    if (e.key === 'ArrowLeft' && basket.x > 0) {
+        basket.x -= basket.speed;
     }
-    if (e.key === 'ArrowRight' && car.x < canvas.width - car.width) {
-        car.x += car.speed;
+    if (e.key === 'ArrowRight' && basket.x < canvas.width - basket.width) {
+        basket.x += basket.speed;
     }
 });
 
-// Handle car movement with touch
+// Handle basket movement with touch
 canvas.addEventListener('touchstart', (e) => {
     const touchX = e.touches[0].clientX;
     
+    // Move basket based on where the user touched (left or right side of the screen)
     if (touchX < canvas.width / 2) {
-        car.x -= car.speed * 5; // Move left
+        basket.x += basket.speed * 5; // Move left
     } else {
-        car.x += car.speed * 5; // Move right
+        basket.x -= basket.speed * 5; // Move right
     }
 });
 
 canvas.addEventListener('touchmove', (e) => {
     const touchX = e.touches[0].clientX;
 
-    car.x = touchX - car.width / 2;
-    
-    if (car.x < 0) car.x = 0;
-    if (car.x > canvas.width - car.width) car.x = canvas.width - car.width;
+    // Move the basket to follow the finger's position
+    basket.x = touchX - basket.width / 2;
+
+    // Prevent the basket from going off the screen
+    if (basket.x < 0) basket.x = 0;
+    if (basket.x > canvas.width - basket.width) basket.x = canvas.width - basket.width;
 
     e.preventDefault(); // Prevent scrolling while playing
 });
@@ -157,13 +196,12 @@ function endGame() {
     saveScore(totalScore); // Save the score to the database
 }
 
-// Automatically end the game after 30 seconds
+// Automatically end the game after 60 seconds
 setTimeout(endGame, 30000);
 
-// Save score to the server
 function saveScore(score) {
-    alert(`Score: ${score}`);
-    alert(`userid: ${user_id}`);
+    // alert(`Score: ${score}`);
+    // alert(`userid: ${user_id}`);
 
     fetch('http://127.0.0.1:8081/update_score', {
         method: 'POST',
@@ -187,7 +225,7 @@ function saveScore(score) {
     .catch(error => {
         alert('Error saving score: ' + error.message);
     });
-    alert("done");
+    // alert("done");
 }
 
 // Start the game
