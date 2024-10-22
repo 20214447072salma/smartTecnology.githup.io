@@ -5,12 +5,12 @@ const urlParams = new URLSearchParams(window.location.search);
 const user_id = urlParams.get('user_id');
 
 // Check if the user_id is available
-if (!user_id) {
-    alert("Error: user ID not found");
-} else {
-    alert("success: user ID found");
+// if (!user_id) {
+//     alert("Error: user ID not found");
+// } else {
+//     alert("success: user ID found");
 
-}
+// }
 
 // Set up the canvas
 const canvas = document.getElementById('gameCanvas');
@@ -39,7 +39,8 @@ let totalScore    = 0;
 let collision     = 5;
 let scoreIncrease = 1;
 let out           = -5;
-let gameInterval, wallInterval;
+let timeLeft      = 30;   
+let gameInterval, wallInterval, timerInterval;
 
 // Images of the game 
 const wallImage = new Image();
@@ -50,8 +51,23 @@ basketImage.src = 'images/basket.png';
 
 // Start game
 function startGame() {
-    gameInterval = setInterval(updateGame, 1000 / 60); // Update the game 60 times per second
-    wallInterval = setInterval(createWall, 500); // Create new walls every 0.5 seconds
+    gameInterval  = setInterval(updateGame, 1000 / 60); // Update the game 60 times per second
+    wallInterval  = setInterval(createWall, 500);      // Create new walls every 0.5 seconds
+    timerInterval = setInterval(updateTimer, 1000)    // Update the timer every second
+}
+
+// Update the timer
+function updateTimer() {
+    timeLeft--;
+    document.getElementById('timer').innerText = `00: ${timeLeft}`;
+
+    if (timeLeft < 10 && timeLeft >= 0) {
+        document.getElementById('timer').innerText = `00: 0${timeLeft}`;
+    }
+
+    else if (timeLeft <= 0) {
+        endGame();  // End the game when the timer runs out
+    }
 }
 
 // Create walls
@@ -194,13 +210,14 @@ canvas.addEventListener('touchmove', (e) => {
 function endGame() {
     clearInterval(gameInterval);
     clearInterval(wallInterval);
+    clearInterval(timerInterval);  // Stop the timer
     totalScore = Math.floor(score);
     alert(`Game Over! Total Score: ${totalScore}`);
     saveScore(totalScore); // Save the score to the database
 }
 
-// Automatically end the game after 60 seconds
-setTimeout(endGame, 30000);
+// Automatically end the game after 30 seconds
+setTimeout(endGame, timeLeft * 1000);
 
 function saveScore(score) {
     // alert(`Score: ${score}`);
