@@ -59,10 +59,10 @@ function startGame() {
 // Update the timer
 function updateTimer() {
     timeLeft--;
-    document.getElementById('timer').innerText = `00: ${timeLeft}`;
+    document.getElementById('timer').innerText = `00:${timeLeft}`;
 
     if (timeLeft < 10 && timeLeft >= 0) {
-        document.getElementById('timer').innerText = `00: 0${timeLeft}`;
+        document.getElementById('timer').innerText = `00:0${timeLeft}`;
     }
 
     else if (timeLeft <= 0) {
@@ -214,6 +214,10 @@ function endGame() {
     totalScore = Math.floor(score);
     alert(`Game Over! Total Score: ${totalScore}`);
     saveScore(totalScore); // Save the score to the database
+
+    setTimeout(() => {
+        window.location.href = 'home.html';  // Replace 'home.html' with your actual home file path
+    }, 2000);                               // Delay of 2 seconds 
 }
 
 // Automatically end the game after 30 seconds
