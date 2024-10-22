@@ -85,6 +85,9 @@ function moveWalls() {
         if (wall.y > canvas.height) {
             walls.splice(index, 1);
             score += out;
+            if (score < 0) {
+                score = 0;
+            }
         }
         drawWall(wall);
     });
