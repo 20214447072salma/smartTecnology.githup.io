@@ -43,7 +43,7 @@ let gameInterval, robotInterval, timerInterval;
 
 // Images of the game 
 const robotImage = new Image();
-robotImage.src = 'logo.png';
+robotImage.src = 'images/logo.png';
 
 const imageOne = new Image();
 imageOne.src = 'images/1.png';
