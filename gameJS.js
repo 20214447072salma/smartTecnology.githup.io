@@ -61,7 +61,7 @@ const imageSeven = new Image();
 imageSeven.src = 'images/7.png';
 
 const basketImage = new Image();
-basketImage.src = '../images/basket.png';
+basketImage.src = 'images/basket.png';
 
 // Start game
 function startGame() {
