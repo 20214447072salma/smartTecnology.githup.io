@@ -48,20 +48,20 @@ robotImage.src = '../images/logo.png';
 const imageOne = new Image();
 imageOne.src = '../images/1.png';
 const imageTwo = new Image();
-imageTwo.src = 'images/2.png';
+imageTwo.src = '../images/2.png';
 const imageThere = new Image();
-imageThere.src = 'images/3.png';
+imageThere.src = '../images/3.png';
 const imageFour = new Image();
-imageFour.src = 'images/4.png';
+imageFour.src = '../images/4.png';
 const imageFive = new Image();
-imageFive.src = 'images/5.png';
+imageFive.src = '../images/5.png';
 const imageSix = new Image();
-imageSix.src = 'images/6.png';
+imageSix.src = '../images/6.png';
 const imageSeven = new Image();
-imageSeven.src = 'images/7.png';
+imageSeven.src = '../images/7.png';
 
 const basketImage = new Image();
-basketImage.src = 'images/basket.png';
+basketImage.src = '../images/basket.png';
 
 // Start game
 function startGame() {
