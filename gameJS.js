@@ -46,7 +46,7 @@ const robotImage = new Image();
 robotImage.src = 'images/logo.png';
 
 const imageOne = new Image();
-imageOne.src = 'images/1.png';
+imageOne.src = '../images/1.png';
 const imageTwo = new Image();
 imageTwo.src = 'images/2.png';
 const imageThere = new Image();
