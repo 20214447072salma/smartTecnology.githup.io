@@ -7,8 +7,45 @@
     <link rel="icon" type="text/css" href="logo.ico">
     <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
+    <style>
+        #timer {
+            position: fixed;
+            top: 10px;
+            right: 10px;  /* Position the timer on the right */
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        #heartStatus {
+            position: fixed;
+            top: 10px;
+            left: 10px;  
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        #totalScore {
+            position: fixed;
+            top: 50px;
+            left: 10px;  
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+    </style>
+
 </head>
 <body>
+    <!-- Display the countdown timer -->
+    <div id="timer">00:00:00</div><br>
+
+    <!-- Display hearts status -->
+    <div id="heartStatus">Hearts Left: 3</div>
+
+    <!-- Total score -->
+     <div id="totalScore">Total score: 0</div>
+
     <!-- Button to Play -->
     <button id="playButton" class="button">Play</button>
 
@@ -59,29 +96,7 @@
     </header>
 
     <!-- JavaScript for Active Link -->
-    <script>
-        const list = document.querySelectorAll('.list');
-        function activeLink() {
-            list.forEach((item) => item.classList.remove('active'));
-            this.classList.add('active');
-        }
-        list.forEach((item) => item.addEventListener('click', activeLink));
-
-        // Get user_id from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const user_id = urlParams.get('user_id');
-
-        // Attach click event to the Play button
-        document.getElementById('playButton').addEventListener('click', function () {
-            if (user_id) {
-                // Redirect to play.html with the user_id
-                window.location.href = `play.html?user_id=${user_id}`;
-                // alert("found");
-            } else {
-                // alert("Error: user ID not found.");
-            }
-        });
-    </script>
+    <script src="home.js"></script>
 
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
