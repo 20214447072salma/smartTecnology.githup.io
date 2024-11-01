@@ -9,7 +9,6 @@ const user_id = urlParams.get('user_id');
 //     alert("Error: user ID not found");
 // } else {
 //     alert("success: user ID found");
-
 // }
 
 // Set up the canvas
@@ -27,24 +26,39 @@ const basket = {
     speed: 8
 };
 
-// Wall properties
-let walls = [];
-const wallWidth  = 100;
-const wallHeight = 20;
-const wallSpeed  = 10;
+// Robot properties
+let robots = [];
+const robotWidth  = 30;
+const robotHeight = 37;
+const robotSpeed  = 10;
 
 // Game variables
 let score         = 0;
 let totalScore    = 0;
-let collision     = 5;
+let collision     = 1;
 let scoreIncrease = 1;
-let out           = -5;
+let out           = -1;
 let timeLeft      = 30;   
-let gameInterval, wallInterval, timerInterval;
+let gameInterval, robotInterval, timerInterval;
 
 // Images of the game 
-const wallImage = new Image();
-wallImage.src = 'images/wall.png';
+const robotImage = new Image();
+robotImage.src = 'images/logo.png';
+
+const imageOne = new Image();
+imageOne.src = 'images/1.png';
+const imageTwo = new Image();
+imageTwo.src = 'images/2.png';
+const imageThere = new Image();
+imageThere.src = 'images/3.png';
+const imageFour = new Image();
+imageFour.src = 'images/4.png';
+const imageFive = new Image();
+imageFive.src = 'images/5.png';
+const imageSix = new Image();
+imageSix.src = 'images/6.png';
+const imageSeven = new Image();
+imageSeven.src = 'images/7.png';
 
 const basketImage = new Image();
 basketImage.src = 'images/basket.png';
@@ -52,7 +66,7 @@ basketImage.src = 'images/basket.png';
 // Start game
 function startGame() {
     gameInterval  = setInterval(updateGame, 1000 / 60); // Update the game 60 times per second
-    wallInterval  = setInterval(createWall, 500);      // Create new walls every 0.5 seconds
+    robotInterval  = setInterval(createrobot, 100);    // Create new robots every 0.5 seconds
     timerInterval = setInterval(updateTimer, 1000)    // Update the timer every second
 }
 
@@ -70,50 +84,66 @@ function updateTimer() {
     }
 }
 
-// Create walls
-function createWall() {
+// Create robots
+function createrobot() {
     /* 
-        the position of the wall in the screen is in random position
-        random to get random position * canvas W - wallWidth to suggest
+        the position of the robot in the screen is in random position
+        random to get random position * canvas W - robotWidth to suggest
         number in the range of window size :) easy
     */
-    let wallX = Math.random() * (canvas.width - wallWidth);  
+    let robotX = Math.random() * (canvas.width - robotWidth);  
 
     // move only in x-axis
-    walls.push({ x: wallX, y: 0 });
+    robots.push({ x: robotX, y: 0 });
 }
 
 // Update game logic
 function updateGame() {
     clearCanvas();
-    moveWalls();
+    moveRobots();
     drawBasket();
     checkCollisionsAndBounds(); // Check for collisions
-    // checkOutOfBounds(); // Check if walls are out of bounds
     updateScore();
     document.getElementById('score').innerText = `Score: ${Math.floor(score)}`;
 }
 
-// Move walls
-function moveWalls() {
-    walls.forEach((wall, index) => {
-        wall.y += wallSpeed;
-        if (wall.y > canvas.height) {
-            walls.splice(index, 1);
+// Move robots
+function moveRobots() {
+    robots.forEach((robot, index) => {
+        robot.y += robotSpeed;
+        if (robot.y > canvas.height) {
+            robots.splice(index, 1);
             score += out;
             if (score < 0) {
                 score = 0;
             }
         }
-        drawWall(wall);
+        drawRobot(robot);
     });
 }
 
 // Draw basket
 function drawBasket() {
-    if(basketImage.complete) { 
-        // Check if the image is loaded
-        ctx.drawImage(basketImage, basket.x, basket.y, basket.width, basket.height);
+    if(basketImage.complete) {     // Check if the image is loaded
+
+        if(score <= 10) {
+            ctx.drawImage(basketImage, basket.x, basket.y, basket.width, basket.height);
+        } else if(score > 10 && score <= 25) {
+            ctx.drawImage(imageOne, basket.x, basket.y, basket.width, basket.height);
+        } else if(score > 25 && score <= 50) {
+            ctx.drawImage(imageTwo, basket.x, basket.y, basket.width, basket.height);
+        } else if(score > 50 && score <= 75) {
+            ctx.drawImage(imageThere, basket.x, basket.y, basket.width, basket.height);
+        } else if(score > 75 && score <= 100) {
+            ctx.drawImage(imageFour, basket.x, basket.y, basket.width, basket.height);
+        } else if(score > 100 && score <= 125) {
+            ctx.drawImage(imageFive, basket.x, basket.y, basket.width, basket.height);
+        } else if(score > 125 && score <= 150) {
+            ctx.drawImage(imageSix, basket.x, basket.y, basket.width, basket.height);
+        } else {
+            ctx.drawImage(imageSeven, basket.x, basket.y, basket.width, basket.height);
+        }
+
     } else { 
         // Draw the rectange as a fallback while the image is loading 
         ctx.fillStyle = 'brawn';
@@ -121,42 +151,31 @@ function drawBasket() {
     } 
 }
 
-// Draw wall
-function drawWall(wall) {
-    if (wallImage.complete) {  
+// Draw Robot
+function drawRobot(robot) {
+    if (robotImage.complete) {  
         // Check if the image is loaded
-        ctx.drawImage(wallImage, wall.x, wall.y, wallWidth, wallHeight);
+        ctx.drawImage(robotImage, robot.x, robot.y, robotWidth, robotHeight);
     } else {
         // Draw the rectangle as a fallback while the image is loading
-        ctx.fillStyle = 'red';
-        ctx.fillRect(wall.x, wall.y, wallWidth, wallHeight);
+        ctx.fillStyle = 'green';
+        ctx.fillRect(robot.x, robot.y, robotWidth, robotHeight);
     }
 }
 
-// Check for collisions and out of bounds walls
+// Check for collisions and out of bounds robots
 function checkCollisionsAndBounds() {
-    walls.forEach((wall, index) => {
+    robots.forEach((robot, index) => {
         // Check for collision with the basket
         if (
-            basket.x < wall.x + wallWidth &&
-            basket.x + basket.width > wall.x &&
-            basket.y < wall.y + wallHeight &&
-            basket.y + basket.height > wall.y
+            basket.x < robot.x + robotWidth &&
+            basket.x + basket.width > robot.x &&
+            basket.y < robot.y + robotHeight &&
+            basket.y + basket.height > robot.y
         ) {
             // Increase score for collision
             score += collision;
-            walls.splice(index, 1); // Remove the wall after collision
-        }
-    });
-}
-
-function checkOutOfBounds() {
-    walls.forEach((wall, index) => {
-        // Check if the wall has moved off the bottom of the screen
-        if (wall.y > canvas.height) {
-            // Decrease score if the wall passes out of the screen without collision
-            score += out;
-            walls.splice(index, 1); // Remove the wall once it goes out of the screen
+            robots.splice(index, 1); // Remove the robot after collision
         }
     });
 }
@@ -209,7 +228,7 @@ canvas.addEventListener('touchmove', (e) => {
 // End game
 function endGame() {
     clearInterval(gameInterval);
-    clearInterval(wallInterval);
+    clearInterval(robotInterval);
     clearInterval(timerInterval);  // Stop the timer
     totalScore = Math.floor(score);
     alert(`Game Over! Total Score: ${totalScore}`);
