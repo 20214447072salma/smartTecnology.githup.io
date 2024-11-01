@@ -235,7 +235,7 @@ function endGame() {
     saveScore(totalScore); // Save the score to the database
 
     setTimeout(() => {
-        window.location.href = 'home.html';  // Replace 'home.html' with your actual home file path
+        window.location.href = 'home.html?user_id=${user_id}';  // Replace 'home.html' with your actual home file path
     }, 2000);                               // Delay of 2 seconds 
 }
 
