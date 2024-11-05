@@ -95,7 +95,7 @@ async function fetchUserInfo() {
                 timerMinutes = Math.floor((data.data.timer % 3600) / 60);
                 timerSeconds = data.data.timer % 60;
 
-                document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
+                document.getElementById('heartStatus').innerText = "Hearts Left: " + data.data.heart;
                 document.getElementById('timer').innerText = `${formatTime(timerhours)}:${formatTime(timerMinutes)}:${formatTime(timerSeconds)}`;
                 document.getElementById('totalScore').innerText = "Total score: " + data.data.score;
             } else {
