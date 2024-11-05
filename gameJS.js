@@ -4,13 +4,6 @@ const urlParams = new URLSearchParams(window.location.search);
 // Extract the user_id from the URL
 const user_id = urlParams.get('user_id');
 
-// Check if the user_id is available
-// if (!user_id) {
-//     alert("Error: user ID not found");
-// } else {
-//     alert("success: user ID found");
-// }
-
 // Set up the canvas
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -33,6 +26,8 @@ const robotHeight = 37;
 const robotSpeed  = 10;
 
 // Game variables
+let timer         = 0;
+let heart         = 3;
 let score         = 0;
 let totalScore    = 0;
 let collision     = 1;
@@ -232,7 +227,7 @@ function endGame() {
     clearInterval(timerInterval);  // Stop the timer
     totalScore = Math.floor(score);
     alert(`Game Over! Total Score: ${totalScore}`);
-    saveScore(totalScore); // Save the score to the database
+    saveScore(totalScore, timer, heart); // Save the score to the database
 
     setTimeout(() => {
         window.location.href = `home.html?user_id=${user_id}`;  // Replace 'home.html' with your actual home file path
@@ -242,7 +237,7 @@ function endGame() {
 // Automatically end the game after 30 seconds
 setTimeout(endGame, timeLeft * 1000);
 
-function saveScore(score) {
+function saveScore(score, timer , heart) {
     // alert(`Score: ${score}`);
     // alert(`userid: ${user_id}`);
 
@@ -253,7 +248,9 @@ function saveScore(score) {
         },
         body: JSON.stringify({
             user_id: user_id,  // Make sure user_id is defined in your scope
-            score: score       // Ensure score is passed correctly
+            score: score,       // Ensure score is passed correctly
+            timer: timer,        // Add timer to the request
+            heart: heart         // Add heart to the request
         })
     })
     .then(response => {
