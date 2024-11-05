@@ -26,8 +26,6 @@ const robotHeight = 37;
 const robotSpeed  = 10;
 
 // Game variables
-let timer         = 0;
-let heart         = 3;
 let score         = 0;
 let totalScore    = 0;
 let collision     = 1;
