@@ -43,7 +43,7 @@ function formatTime(unit) {
 
 // Function to start the game
 function startGame() {
-    if (heartsLeft > 1) {
+    if (heartsLeft > 0) {
         if (user_id) {
             // Redirect to play.html with the user_id
             window.location.href = `play.html?user_id=${user_id}`;
@@ -55,19 +55,18 @@ function startGame() {
         heartsLeft--; // Decrement hearts by 1 for each play
 
         document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
-
-    } else {
-        // Start 5-hour timer after the user has used up all hearts
-        document.getElementById('heartStatus').innerText = `Hearts Left: 0`;
-        if (!timerInterval) {
-            timerInterval = setInterval(updateTimer, 1000);  // Update the timer every second
-        }
-    }
+    } 
 }
 
 // Play button event listener
 document.getElementById('playButton').addEventListener('click', function () {
     startGame();
+        if (heartsLeft === 0) {
+        document.getElementById('heartStatus').innerText = `Hearts Left: 0`;
+        if (!timerInterval) {
+            timerInterval = setInterval(updateTimer, 1000);  // Update the timer every second
+        }
+    }
 });
 
 // Reset hearts and timer after 5 hours
