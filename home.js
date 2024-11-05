@@ -20,7 +20,7 @@ function updateTimer() {
     document.getElementById('timer').innerText = `${formatTime(timerhours)}:${formatTime(timerMinutes)}:${formatTime(timerSeconds)}`;
     
     // Decrement the time
-    if (timerSeconds > 1) {
+    if (timerSeconds > 0) {
         timerSeconds--;
     } else if (timerMinutes > 0) {
         timerMinutes--;
