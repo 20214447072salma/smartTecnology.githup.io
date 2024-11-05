@@ -238,8 +238,8 @@ function endGame() {
 setTimeout(endGame, timeLeft * 1000);
 
 function saveScore(score, timer , heart) {
-    // alert(`Score: ${score}`);
-    // alert(`userid: ${user_id}`);
+    alert(`heart: ${heart}`);
+    alert(`timer: ${timer}`);
 
     fetch('http://127.0.0.1:8081/update_score', {
         method: 'POST',
