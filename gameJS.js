@@ -1,266 +1,164 @@
-// Get the URL parameters
 const urlParams = new URLSearchParams(window.location.search);
-
-// Extract the user_id from the URL
 const user_id = urlParams.get('user_id');
 
-// Set up the canvas
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const list = document.querySelectorAll('.list');
+function activeLink() {
+    list.forEach((item) => item.classList.remove('active'));
+    this.classList.add('active');
+}
+list.forEach((item) => item.addEventListener('click', activeLink));
 
-// basket properties
-const basket = {
-    width: 100,
-    height: 100,
-    x: canvas.width / 2 - 25,
-    y: canvas.height - 100,
-    speed: 8
-};
+let heartsLeft = 3;
+let timerhours = 4;
+let timerMinutes = 59;
+let timerSeconds = 59;
+let timerInterval;
 
-// Robot properties
-let robots = [];
-const robotWidth  = 30;
-const robotHeight = 37;
-const robotSpeed  = 10;
+function updateTimerDisplay() {
+    document.getElementById('timer').innerText = `${formatTime(timerhours)}:${formatTime(timerMinutes)}:${formatTime(timerSeconds)}`;
+}
 
-// Game variables
-let score         = 0;
-let totalScore    = 0;
-let collision     = 1;
-let scoreIncrease = 1;
-let out           = -1;
-let timeLeft      = 30;   
-let gameInterval, robotInterval, timerInterval;
+function decrementTimer() {
+    if (timerSeconds > 0) {
+        timerSeconds--;
+    } else if (timerMinutes > 0) {
+        timerMinutes--;
+        timerSeconds = 59;
+    } else if (timerhours > 0) {
+        timerhours--;
+        timerMinutes = 59;
+        timerSeconds = 59;
+    } else {
+        clearInterval(timerInterval);
+        alert("Time is up! You can play again with three hearts.");
+        resetHearts();
+    }
 
-// Images of the game 
-const robotImage = new Image();
-robotImage.src = 'images/logo.png';
+    updateTimerDisplay();
 
-const imageOne = new Image();
-imageOne.src = 'images/1.png';
-const imageTwo = new Image();
-imageTwo.src = 'images/2.png';
-const imageThere = new Image();
-imageThere.src = 'images/3.png';
-const imageFour = new Image();
-imageFour.src = 'images/4.png';
-const imageFive = new Image();
-imageFive.src = 'images/5.png';
-const imageSix = new Image();
-imageSix.src = 'images/6.png';
-const imageSeven = new Image();
-imageSeven.src = 'images/7.png';
+    // Update timer in database every 60 seconds
+    if (timerSeconds % 60 === 0) {
+        const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
+        sendTimerToDatabase(remainingTimeInSeconds);
+    }
+}
 
-const basketImage = new Image();
-basketImage.src = 'images/basket.png';
+function formatTime(unit) {
+    return unit < 10 ? `0${unit}` : unit;
+}
 
-// Start game
 function startGame() {
-    gameInterval  = setInterval(updateGame, 1000 / 60); // Update the game 60 times per second
-    robotInterval  = setInterval(createrobot, 100);    // Create new robots every 0.5 seconds
-    timerInterval = setInterval(updateTimer, 1000)    // Update the timer every second
-}
-
-// Update the timer
-function updateTimer() {
-    timeLeft--;
-    document.getElementById('timer').innerText = `00:${timeLeft}`;
-
-    if (timeLeft < 10 && timeLeft >= 0) {
-        document.getElementById('timer').innerText = `00:0${timeLeft}`;
-    }
-
-    else if (timeLeft <= 0) {
-        endGame();  // End the game when the timer runs out
-    }
-}
-
-// Create robots
-function createrobot() {
-    /* 
-        the position of the robot in the screen is in random position
-        random to get random position * canvas W - robotWidth to suggest
-        number in the range of window size :) easy
-    */
-    let robotX = Math.random() * (canvas.width - robotWidth);  
-
-    // move only in x-axis
-    robots.push({ x: robotX, y: 0 });
-}
-
-// Update game logic
-function updateGame() {
-    clearCanvas();
-    moveRobots();
-    drawBasket();
-    checkCollisionsAndBounds(); // Check for collisions
-    updateScore();
-    document.getElementById('score').innerText = `Score: ${Math.floor(score)}`;
-}
-
-// Move robots
-function moveRobots() {
-    robots.forEach((robot, index) => {
-        robot.y += robotSpeed;
-        if (robot.y > canvas.height) {
-            robots.splice(index, 1);
-            score += out;
-            if (score < 0) {
-                score = 0;
-            }
-        }
-        drawRobot(robot);
-    });
-}
-
-// Draw basket
-function drawBasket() {
-    if(basketImage.complete) {     // Check if the image is loaded
-
-        if(score <= 10) {
-            ctx.drawImage(basketImage, basket.x, basket.y, basket.width, basket.height);
-        } else if(score > 10 && score <= 25) {
-            ctx.drawImage(imageOne, basket.x, basket.y, basket.width, basket.height);
-        } else if(score > 25 && score <= 50) {
-            ctx.drawImage(imageTwo, basket.x, basket.y, basket.width, basket.height);
-        } else if(score > 50 && score <= 75) {
-            ctx.drawImage(imageThere, basket.x, basket.y, basket.width, basket.height);
-        } else if(score > 75 && score <= 100) {
-            ctx.drawImage(imageFour, basket.x, basket.y, basket.width, basket.height);
-        } else if(score > 100 && score <= 125) {
-            ctx.drawImage(imageFive, basket.x, basket.y, basket.width, basket.height);
-        } else if(score > 125 && score <= 150) {
-            ctx.drawImage(imageSix, basket.x, basket.y, basket.width, basket.height);
+    if (heartsLeft > 0) {
+        if (user_id) {
+            alert("User ID found");
         } else {
-            ctx.drawImage(imageSeven, basket.x, basket.y, basket.width, basket.height);
+            alert("Error: User ID not found.");
         }
-
-    } else { 
-        // Draw the rectange as a fallback while the image is loading 
-        ctx.fillStyle = 'brawn';
-        ctx.fillRect(basket.x, basket.y, basket.width, basket.height);
-    } 
-}
-
-// Draw Robot
-function drawRobot(robot) {
-    if (robotImage.complete) {  
-        // Check if the image is loaded
-        ctx.drawImage(robotImage, robot.x, robot.y, robotWidth, robotHeight);
-    } else {
-        // Draw the rectangle as a fallback while the image is loading
-        ctx.fillStyle = 'green';
-        ctx.fillRect(robot.x, robot.y, robotWidth, robotHeight);
+        heartsLeft--;
+        updateHeart(heartsLeft);
     }
 }
 
-// Check for collisions and out of bounds robots
-function checkCollisionsAndBounds() {
-    robots.forEach((robot, index) => {
-        // Check for collision with the basket
-        if (
-            basket.x < robot.x + robotWidth &&
-            basket.x + basket.width > robot.x &&
-            basket.y < robot.y + robotHeight &&
-            basket.y + basket.height > robot.y
-        ) {
-            // Increase score for collision
-            score += collision;
-            robots.splice(index, 1); // Remove the robot after collision
+// Play button event listener
+document.getElementById('playButton').addEventListener('click', function () {
+    startGame();
+    if (heartsLeft === 0) {
+        document.getElementById('heartStatus').innerText = `Hearts Left: 0`;
+        if (!timerInterval) {
+            timerInterval = setInterval(decrementTimer, 1000);  // Update the timer every second
         }
-    });
-}
-
-// Update score
-function updateScore() {
-    score += scoreIncrease / 60; // Add points over time
-}
-
-// Clear canvas
-function clearCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-// Handle basket movement with keyboard
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft' && basket.x > 0) {
-        basket.x -= basket.speed;
-    }
-    if (e.key === 'ArrowRight' && basket.x < canvas.width - basket.width) {
-        basket.x += basket.speed;
     }
 });
 
-// Handle basket movement with touch
-canvas.addEventListener('touchstart', (e) => {
-    const touchX = e.touches[0].clientX;
-    
-    // Move basket based on where the user touched (left or right side of the screen)
-    if (touchX < canvas.width / 2) {
-        basket.x += basket.speed * 5; // Move left
-    } else {
-        basket.x -= basket.speed * 5; // Move right
-    }
-});
+function resetHearts() {
+    heartsLeft = 3;
+    clearInterval(timerInterval);
+    timerhours = 4;
+    timerMinutes = 59;
+    timerSeconds = 59;
+    timerInterval = null;
 
-canvas.addEventListener('touchmove', (e) => {
-    const touchX = e.touches[0].clientX;
+    updateHeart(heartsLeft);
+    sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
 
-    // Move the basket to follow the finger's position
-    basket.x = touchX - basket.width / 2;
-
-    // Prevent the basket from going off the screen
-    if (basket.x < 0) basket.x = 0;
-    if (basket.x > canvas.width - basket.width) basket.x = canvas.width - basket.width;
-
-    e.preventDefault(); // Prevent scrolling while playing
-});
-
-// End game
-function endGame() {
-    clearInterval(gameInterval);
-    clearInterval(robotInterval);
-    clearInterval(timerInterval);  // Stop the timer
-    totalScore = Math.floor(score);
-    alert(`Game Over! Total Score: ${totalScore}`);
-    saveScore(totalScore); // Save the score to the database
-
-    setTimeout(() => {
-        window.location.href = `home.html?user_id=${user_id}`;  // Replace 'home.html' with your actual home file path
-    }, 2000);                               // Delay of 2 seconds 
+    document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
+    updateTimerDisplay();
 }
 
-// Automatically end the game after 30 seconds
-setTimeout(endGame, timeLeft * 1000);
+async function fetchUserInfo() {
+    if (!user_id) {
+        alert("User ID is missing.");
+        return;
+    }
+    try {
+        const response = await fetch(`http://127.0.0.1:8081/get_user_info/${user_id}`);
+        if (response.ok) {
+            const data = await response.json();
+            if (data.status === 'success') {
+                heartsLeft = data.data.heart;
+                const totalSeconds = data.data.timer;
+                timerhours = Math.floor(totalSeconds / 3600);
+                timerMinutes = Math.floor((totalSeconds % 3600) / 60);
+                timerSeconds = totalSeconds % 60;
 
-function saveScore(score) {
+                document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
+                document.getElementById('totalScore').innerText = "Total score: " + data.data.score;
+                updateTimerDisplay();
+            } else {
+                alert('User not found');
+            }
+        } else {
+            alert('Failed to fetch user info');
+        }
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+}
 
-    fetch('http://127.0.0.1:8081/update_score', {
+function sendTimerToDatabase(timerInSeconds) {
+    const hours = Math.floor(timerInSeconds / 3600);
+    const minutes = Math.floor((timerInSeconds % 3600) / 60);
+    const seconds = timerInSeconds % 60;
+    const timerFormatted = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+
+    fetch('http://127.0.0.1:8081/update_timer', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            user_id: user_id,  // Make sure user_id is defined in your scope
-            score: score,       // Ensure score is passed correctly
+            user_id: user_id,
+            timer: timerFormatted
         })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        alert('Score saved successfully: ' + JSON.stringify(data));
+        alert('timer updated successfully: ' + JSON.stringify(data));
     })
     .catch(error => {
-        alert('Error saving score: ' + error.message);
+        alert('Error update timer: ' + error.message);
     });
-    // alert("done");
 }
 
-// Start the game
-startGame();
+function updateHeart(heartsLeft) {
+    fetch('http://127.0.0.1:8081/update_heart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user_id: user_id,
+            heart: heartsLeft
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('heart updated successfully: ' + JSON.stringify(data));
+    })
+    .catch(error => {
+        alert('Error update heart: ' + error.message);
+    });
+}
+
+window.onload = fetchUserInfo;
+setTimeout(resetHearts, 5 * 60 * 60 * 1000); // Reset after 5 hours
