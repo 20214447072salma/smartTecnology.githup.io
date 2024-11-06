@@ -134,10 +134,10 @@ function sendTimerToDatabase(timerInSeconds) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Timer update response:', data);
+        alert('timer updated successfully: ' + JSON.stringify(data));
     })
     .catch(error => {
-        console.error('Error updating timer:', error.message);
+        alert('Error update timer: ' + error.message);
     });
 }
 
@@ -154,10 +154,10 @@ function updateHeart(heartsLeft) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Heart update response:', data);
+        alert('heart updated successfully: ' + JSON.stringify(data));
     })
     .catch(error => {
-        console.error('Error updating heart:', error.message);
+        alert('Error update heart: ' + error.message);
     });
 }
 
