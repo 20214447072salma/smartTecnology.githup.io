@@ -14,12 +14,12 @@ let timerMinutes = 59;
 let timerSeconds = 59;
 let timerInterval;
 
-// Function to update the timer
-function updateTimer() {
-    // Update timer on the screen
+// Function to update the timer on screen and in the database
+function updateTimerDisplay() {
     document.getElementById('timer').innerText = `${formatTime(timerhours)}:${formatTime(timerMinutes)}:${formatTime(timerSeconds)}`;
-    
-    // Decrement the time
+}
+
+function decrementTimer() {
     if (timerSeconds > 0) {
         timerSeconds--;
     } else if (timerMinutes > 0) {
@@ -30,19 +30,25 @@ function updateTimer() {
         timerMinutes = 59;
         timerSeconds = 59;
     } else {
-        clearInterval(timerInterval); // Stop the timer once it reaches 0:00:00
+        clearInterval(timerInterval); // Stop timer when it reaches 0
         alert("Time is up! You can play again with three hearts.");
         resetHearts();
     }
-
-    // Update the timer in the database
+    updateTimerDisplay();
     const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
-    updateHeartAndTimer(heartsLeft, remainingTimeInSeconds);
+    updateTimer(remainingTimeInSeconds); // Update timer in database
 }
 
 // Helper function to format time (add leading zero if needed)
 function formatTime(unit) {
     return unit < 10 ? `0${unit}` : unit;
+}
+
+// Function to start the timer countdown
+function startTimerCountdown() {
+    if (!timerInterval) {
+        timerInterval = setInterval(decrementTimer, 1000); // Decrement every second
+    }
 }
 
 // Function to start the game
@@ -58,12 +64,7 @@ function startGame() {
         }
         heartsLeft--; // Decrement hearts by 1 for each play
 
-
-        // Calculate the remaining time in seconds
-        const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
-
-        // Update heart and timer in the database
-        updateHeartAndTimer(heartsLeft, remainingTimeInSeconds);
+        updateHeart(heartsLeft);
 
         // Update the heart status on the screen
         document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
@@ -89,32 +90,31 @@ function resetHearts() {
     timerMinutes = 59;
     timerSeconds = 59;
     timerInterval = null;
-    document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
-    document.getElementById('timer').innerText = `${formatTime(timerhours)}:${formatTime(timerMinutes)}:${formatTime(timerSeconds)}`;
-    
-    // Update heart and timer in the database after reset
+
+    updateHeart(heartsLeft); // Update heart count in database
+
     const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
-    updateHeartAndTimer(heartsLeft, remainingTimeInSeconds);
+    updateTimer(remainingTimeInSeconds); // Reset timer in database
+
+    document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
+    updateTimerDisplay();
 }
 
-// Function to fetch user info, including heart and timer values, from the database
+// Fetch user info from the database when the page loads
 async function fetchUserInfo() {
-    alert(`User ID: ${user_id}`);
     try {
         const response = await fetch(`http://127.0.0.1:8081/get_user_info/${user_id}`);
         if (response.ok) {
             const data = await response.json();
             if (data.status === 'success') {
                 heartsLeft = data.data.heart;
-                timerhours = Math.floor(data.data.timer / 3600);
-                timerMinutes = Math.floor((data.data.timer % 3600) / 60);
-                timerSeconds = data.data.timer % 60;
-
-                alert(heartsLeft);
-
+                const totalSeconds = data.data.timer;
+                timerhours = Math.floor(totalSeconds / 3600);
+                timerMinutes = Math.floor((totalSeconds % 3600) / 60);
+                timerSeconds = totalSeconds % 60;
                 document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
-                document.getElementById('timer').innerText = `${formatTime(timerhours)}:${formatTime(timerMinutes)}:${formatTime(timerSeconds)}`;
                 document.getElementById('totalScore').innerText = "Total score: " + data.data.score;
+                updateTimerDisplay();
             } else {
                 alert('User not found');
             }
@@ -126,34 +126,45 @@ async function fetchUserInfo() {
     }
 }
 
-// Function to update both heart and timer in the database
-function updateHeartAndTimer(heartsLeft, timerInSeconds) {
-    fetch('http://127.0.0.1:8081/update_score', {
+function updateTimer(timerInSeconds) {
+    fetch('http://127.0.0.1:8081/update_timer', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             user_id: user_id,
-            heart: heartsLeft,
-            timer: timerInSeconds  // Send the timer as total seconds
+            timer: timerInSeconds
         })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        alert('Heart and timer updated successfully: ' + JSON.stringify(data));
+        alert('Timer updated successfully: ' + JSON.stringify(data));
     })
     .catch(error => {
-        alert('Error updating heart and timer: ' + error.message);
+        alert('Error updating timer: ' + error.message);
     });
 }
 
-
+function updateHeart(heartsLeft) {
+    fetch('http://127.0.0.1:8081/update_heart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user_id: user_id,
+            heart: heartsLeft
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Heart updated successfully: ' + JSON.stringify(data));
+    })
+    .catch(error => {
+        alert('Error updating heart: ' + error.message);
+    });
+}
 
 // Call fetchUserInfo when the page loads
 window.onload = fetchUserInfo;
