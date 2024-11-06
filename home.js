@@ -56,6 +56,7 @@ function startGame() {
         }
         heartsLeft--;
         updateHeart(heartsLeft);
+        document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
     }
 }
 
