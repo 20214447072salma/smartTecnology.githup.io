@@ -61,16 +61,15 @@ function startGame() {
         if (heartsLeft === 0 && !timerInterval) {
             timerInterval = setInterval(decrementTimer, 1000);
         }
-
-        document.getElementById('playButton').addEventListener('click', function() {
-            if (heartsLeft === 0) {
-                alert("YOU HAVE TO WAIT 5 HOURS");
-            }
-        });
     }
 }
 
-document.getElementById('playButton').addEventListener('click', startGame);
+document.getElementById('playButton').addEventListener('click', function() {
+    startGame();
+    if (heartsLeft === 0) {
+        alert("YOU HAVE TO WAIT 5 HOURS");
+    }
+});
 
 function resetHearts() {
     heartsLeft = 3;
