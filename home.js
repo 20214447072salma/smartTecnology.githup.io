@@ -34,6 +34,10 @@ function updateTimer() {
         alert("Time is up! You can play again with three hearts.");
         resetHearts();
     }
+
+    // Update the timer in the database
+    const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
+    updateHeartAndTimer(heartsLeft, remainingTimeInSeconds);
 }
 
 // Helper function to format time (add leading zero if needed)
@@ -54,6 +58,14 @@ function startGame() {
         }
         heartsLeft--; // Decrement hearts by 1 for each play
 
+
+        // Calculate the remaining time in seconds
+        const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
+
+        // Update heart and timer in the database
+        updateHeartAndTimer(heartsLeft, remainingTimeInSeconds);
+
+        // Update the heart status on the screen
         document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
     }
 }
@@ -79,8 +91,10 @@ function resetHearts() {
     timerInterval = null;
     document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
     document.getElementById('timer').innerText = `${formatTime(timerhours)}:${formatTime(timerMinutes)}:${formatTime(timerSeconds)}`;
-    // Upload reset hearts and timer
-    uploadHeartAndTimer(heartsLeft, timerhours, timerMinutes, timerSeconds);
+    
+    // Update heart and timer in the database after reset
+    const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
+    updateHeartAndTimer(heartsLeft, remainingTimeInSeconds);
 }
 
 // Function to fetch user info, including heart and timer values, from the database
@@ -112,10 +126,8 @@ async function fetchUserInfo() {
     }
 }
 
-function uploadHeartAndTimer(heartsLeft, timerhours, timerMinutes, timerSeconds) {
-    // Convert hours, minutes, and seconds to total seconds
-    const timerInSeconds = (timerhours * 3600) + (timerMinutes * 60) + timerSeconds;
-
+// Function to update both heart and timer in the database
+function updateHeartAndTimer(heartsLeft, timerInSeconds) {
     fetch('http://127.0.0.1:8081/update_score', {
         method: 'POST',
         headers: {
@@ -124,7 +136,7 @@ function uploadHeartAndTimer(heartsLeft, timerhours, timerMinutes, timerSeconds)
         body: JSON.stringify({
             user_id: user_id,
             heart: heartsLeft,
-            timer: timerInSeconds  // Send the timer in total seconds
+            timer: timerInSeconds  // Send the timer as total seconds
         })
     })
     .then(response => {
@@ -134,12 +146,13 @@ function uploadHeartAndTimer(heartsLeft, timerhours, timerMinutes, timerSeconds)
         return response.json();
     })
     .then(data => {
-        alert('Score saved successfully: ' + JSON.stringify(data));
+        alert('Heart and timer updated successfully: ' + JSON.stringify(data));
     })
     .catch(error => {
-        alert('Error saving score: ' + error.message);
+        alert('Error updating heart and timer: ' + error.message);
     });
 }
+
 
 
 // Call fetchUserInfo when the page loads
