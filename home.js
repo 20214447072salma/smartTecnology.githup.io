@@ -21,23 +21,25 @@ function updateTimerDisplay() {
 function decrementTimer() {
     if (timerSeconds > 0) {
         timerSeconds--;
-        updateTimerDisplay();
-        sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
     } else if (timerMinutes > 0) {
         timerMinutes--;
         timerSeconds = 59;
-        updateTimerDisplay();
-        sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
     } else if (timerhours > 0) {
         timerhours--;
         timerMinutes = 59;
         timerSeconds = 59;
-        updateTimerDisplay();
-        sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
     } else {
         clearInterval(timerInterval);
         alert("Time is up! You can play again with three hearts.");
         resetHearts();
+    }
+
+    updateTimerDisplay();
+
+    // Update timer in database every 60 seconds
+    if (timerSeconds % 60 === 0) {
+        const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
+        sendTimerToDatabase(remainingTimeInSeconds);
     }
 }
 
@@ -59,6 +61,12 @@ function startGame() {
         if (heartsLeft === 0 && !timerInterval) {
             timerInterval = setInterval(decrementTimer, 1000);
         }
+
+        document.getElementById('playButton').addEventListener('click', function() {
+            if (heartsLeft === 0) {
+                alert("YOU HAVE TO WAIT 5 HOURS");
+            }
+        });
     }
 }
 
