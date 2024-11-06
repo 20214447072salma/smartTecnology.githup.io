@@ -56,18 +56,17 @@ function startGame() {
         }
         heartsLeft--;
         updateHeart(heartsLeft);
-        document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
-
-        if (heartsLeft === 0 && !timerInterval) {
-            timerInterval = setInterval(decrementTimer, 1000);
-        }
     }
 }
 
-document.getElementById('playButton').addEventListener('click', function() {
+// Play button event listener
+document.getElementById('playButton').addEventListener('click', function () {
     startGame();
     if (heartsLeft === 0) {
-        alert("YOU HAVE TO WAIT 5 HOURS");
+        document.getElementById('heartStatus').innerText = `Hearts Left: 0`;
+        if (!timerInterval) {
+            timerInterval = setInterval(decrementTimer, 1000);  // Update the timer every second
+        }
     }
 });
 
