@@ -228,7 +228,7 @@ function endGame() {
     clearInterval(timerInterval);  // Stop the timer
     totalScore = Math.floor(score);
     alert(`Game Over! Total Score: ${totalScore}`);
-    saveScore(totalScore, formattedTimer, heart); // Save the score to the database
+    saveScore(totalScore, timer, heart); // Save the score to the database
 
     setTimeout(() => {
         window.location.href = `home.html?user_id=${user_id}`;  // Replace 'home.html' with your actual home file path
@@ -238,7 +238,7 @@ function endGame() {
 // Automatically end the game after 30 seconds
 setTimeout(endGame, timeLeft * 1000);
 
-function saveScore(score, formattedTimer , heart) {
+function saveScore(score, timer , heart) {
     alert(`heart: ${heart}`);
     alert(`timer: ${timer}`);
 
@@ -250,7 +250,7 @@ function saveScore(score, formattedTimer , heart) {
         body: JSON.stringify({
             user_id: user_id,  // Make sure user_id is defined in your scope
             score: score,       // Ensure score is passed correctly
-            timer: formattedTimer,        // Add timer to the request
+            timer: timer,        // Add timer to the request
             heart: heart         // Add heart to the request
         })
     })
