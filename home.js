@@ -46,22 +46,22 @@ function startGame() {
     if (heartsLeft > 0) {
         if (user_id) {
             // Redirect to play.html with the user_id
-            window.location.href = `play.html?user_id=${user_id}`;
+            // window.location.href = `play.html?user_id=${user_id}`;
             alert("found");
         } else {
             // alert("Error: user ID not found.");
-            window.location.href = `play.html`;
+            // window.location.href = `play.html`;
         }
         heartsLeft--; // Decrement hearts by 1 for each play
 
         document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
-    } 
+    }
 }
 
 // Play button event listener
 document.getElementById('playButton').addEventListener('click', function () {
     startGame();
-        if (heartsLeft === 0) {
+    if (heartsLeft === 0) {
         document.getElementById('heartStatus').innerText = `Hearts Left: 0`;
         if (!timerInterval) {
             timerInterval = setInterval(updateTimer, 1000);  // Update the timer every second
@@ -79,6 +79,8 @@ function resetHearts() {
     timerInterval = null;
     document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
     document.getElementById('timer').innerText = `${formatTime(timerhours)}:${formatTime(timerMinutes)}:${formatTime(timerSeconds)}`;
+    // Upload reset hearts and timer
+    uploadHeartAndTimer(heartsLeft, timerhours, timerMinutes, timerSeconds);
 }
 
 // Function to fetch user info, including heart and timer values, from the database
@@ -110,7 +112,37 @@ async function fetchUserInfo() {
     }
 }
 
+function uploadHeartAndTimer(heartsLeft, timerhours, timerMinutes, timerSeconds) {
+    // Convert hours, minutes, and seconds to total seconds
+    const timerInSeconds = (timerhours * 3600) + (timerMinutes * 60) + timerSeconds;
+
+    fetch('http://127.0.0.1:8081/update_score', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user_id: user_id,
+            heart: heartsLeft,
+            timer: timerInSeconds  // Send the timer in total seconds
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert('Score saved successfully: ' + JSON.stringify(data));
+    })
+    .catch(error => {
+        alert('Error saving score: ' + error.message);
+    });
+}
+
+
 // Call fetchUserInfo when the page loads
 window.onload = fetchUserInfo;
 
-setTimeout(resetHearts, (60 * 60 * 1000));  // 5 hours in milliseconds
+setTimeout(resetHearts, 5 * 60 * 60 * 1000); // 5 hours in milliseconds
