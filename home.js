@@ -84,7 +84,7 @@ document.getElementById('playButton').addEventListener('click', function () {
     if (heartsLeft === 0) {
         document.getElementById('heartStatus').innerText = `Hearts Left: 0`;
         if (!timerInterval) {
-            const endTime = new Date(Date.now() + 5 * 60 * 60 * 1000);  // 5 hours from now
+            const endTime = new Date(Date.now() + 2 * 60 * 1000);  // 5 hours from now
             sendTimerToDatabase(endTime.toISOString());
             startCountdown(endTime);
         }
@@ -110,7 +110,7 @@ function resetHearts() {
     heartsLeft = 3;
     updateHeart(heartsLeft);
 
-    const newEndTime = new Date(Date.now() + 5 * 60 * 60 * 1000); // 5 hours from now
+    const newEndTime = new Date(Date.now() + 2 * 60 * 1000); // 5 hours from now
     sendTimerToDatabase(newEndTime.toISOString());
     startCountdown(newEndTime);
     updateTimerDisplay(5, 0, 0);
