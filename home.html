@@ -3,36 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game</title>
+    <title>Robotics Club</title>
+    <link rel="icon" type="text/css" href="logo.ico">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-        canvas {
-            background-color: white;
-            display: block;
-        }
-        #score {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            font-size: 24px;
-            font-family: Arial, sans-serif;
-        }
         #timer {
             position: fixed;
             top: 10px;
             right: 10px;  /* Position the timer on the right */
             font-size: 24px;
             font-family: Arial, sans-serif;
+            color: white;
+        }
+        #heartStatus {
+            position: fixed;
+            top: 10px;
+            left: 10px;  
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        #totalScore {
+            position: fixed;
+            top: 50px;
+            left: 10px;  
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            color: white;
         }
     </style>
+
 </head>
 <body>
-    <div id="score">Score: 0</div>       <!-- Score display -->
-    <div id="timer">00:30</div>          <!-- Timer display -->
-    <canvas id="gameCanvas"></canvas>
-    <script src="gameJS.js"></script>
+    <!-- Display the countdown timer -->
+    <div id="timer">00:00:00</div><br>
+
+    <!-- Display hearts status -->
+    <div id="heartStatus">Hearts Left: 3</div>
+
+    <!-- Total score -->
+    <div id="totalScore">Total score: 0</div>
+
+    <!-- Button to Play -->
+    <button id="playButton" class="button">Play</button>
+
+    <!-- Navigation Menu -->
+    <header>
+        <div class="navigation">
+            <ul>
+                <li class="list active">
+                    <a href="home.html">
+                        <span class="icon">
+                            <ion-icon name="home"></ion-icon>
+                        </span>
+                        <span class="text">Home</span>
+                    </a>
+                </li>
+
+                <li class="list">
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="clipboard"></ion-icon>
+                        </span>
+                        <span class="text">Tasks</span>
+                    </a>
+                </li>
+
+                <li class="list">
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="people"></ion-icon>
+                        </span>
+                        <span class="text">Friends</span>
+                    </a>
+                </li>
+
+                <li class="list">
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="wallet"></ion-icon>
+                        </span>
+                        <span class="text">Book</span>
+                    </a>
+                </li>
+
+                <!-- Indicator -->
+                <div class="indicator"></div>
+            </ul>
+        </div>
+    </header>
+
+    <!-- JavaScript for Active Link -->
+    <script src="home.js"></script>
+
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
