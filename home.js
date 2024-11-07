@@ -37,7 +37,7 @@ function decrementTimer() {
     updateTimerDisplay();
 
     // Update timer in database every 60 seconds
-    if (timerSeconds % 1 === 0) {
+    if (timerSeconds % 60 === 0) {
         const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
         sendTimerToDatabase(remainingTimeInSeconds);
     }
@@ -50,9 +50,12 @@ function formatTime(unit) {
 function startGame() {
     if (heartsLeft > 0) {
         if (user_id) {
-            alert("User ID found");
+            // Redirect to play.html with the user_id
+            window.location.href = `play.html?user_id=${user_id}`;
+            alert("found");
         } else {
-            alert("Error: User ID not found.");
+            alert("Error: user ID not found.");
+            window.location.href = play.html;
         }
         heartsLeft--;
         updateHeart(heartsLeft);
