@@ -61,31 +61,34 @@ function startGame() {
         updateHeart(heartsLeft);
         document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
     }
+
+    if (heartsLeft === 0 && !timerInterval) {
+        resetTimer(); 
+        sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
+        updateTimerDisplay();
+        timerInterval = setInterval(decrementTimer, 1000);  // Update the timer every second
+    }
 }
 
 // Play button event listener
 document.getElementById('playButton').addEventListener('click', function () {
     startGame();
-    if (heartsLeft === 0) {
-        document.getElementById('heartStatus').innerText = `Hearts Left: 0`;
-        if (!timerInterval) {
-            timerInterval = setInterval(decrementTimer, 1000);  // Update the timer every second
-        }
-    }
 });
 
 function resetHearts() {
     heartsLeft = 3;
+    updateHeart(heartsLeft);
+    document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
+}
+
+function resetTimer() {
     clearInterval(timerInterval);
     timerhours = 4;
     timerMinutes = 59;
     timerSeconds = 59;
     timerInterval = null;
 
-    updateHeart(heartsLeft);
     sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
-
-    document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
     updateTimerDisplay();
 }
 
