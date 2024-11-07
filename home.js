@@ -9,9 +9,9 @@ function activeLink() {
 list.forEach((item) => item.addEventListener('click', activeLink));
 
 let heartsLeft = 3;
-let timerhours = 4;
-let timerMinutes = 59;
-let timerSeconds = 59;
+// let timerhours = 4;
+// let timerMinutes = 59;
+// let timerSeconds = 59;
 let timerInterval;
 
 function updateTimerDisplay(hours, minutes, seconds) {
@@ -160,6 +160,7 @@ async function fetchUserInfo() {
             const remainingSeconds = Math.max((endTime - now) / 1000, 0);
             
             document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
+            document.getElementById('totalScore').innerText = "Total score: " + data.data.score;
             if (remainingSeconds > 0) {
                 startCountdown(endTime);
             } else {
