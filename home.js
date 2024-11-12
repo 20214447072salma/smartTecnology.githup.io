@@ -66,13 +66,14 @@ async function startGame() {
 
     if (userInfo && userInfo.next) {
         const nextTime = new Date(userInfo.next).getTime();
-
+        alert(nextTime);
         if (isNaN(nextTime)) {
             alert("Invalid `next` time format:", userInfo.next);
             return;
         }
 
         const currentTime = Date.now();
+        alert(currentTime);
 
         if (currentTime >= nextTime) {
             // If the current time is past `next`, start a new countdown
