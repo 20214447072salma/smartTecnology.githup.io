@@ -9,9 +9,9 @@ function activeLink() {
 list.forEach((item) => item.addEventListener('click', activeLink));
 
 let heartsLeft = 3;
-let timerhours = 4;
-let timerMinutes = 59;
-let timerSeconds = 59;
+let timerhours = 0;
+let timerMinutes = 0;
+let timerSeconds = 3;
 let timerInterval;
 
 function updateTimerDisplay() {
@@ -51,29 +51,24 @@ function startGame() {
     if (heartsLeft > 0) {
         if (user_id) {
             // Redirect to play.html with the user_id
-            window.location.href = `play.html?user_id=${user_id}`;
-            alert("found");
+            // window.location.href = `play.html?user_id=${user_id}`;
+            // alert("found");
         } else {
-            alert("Error: user ID not found.");
-            window.location.href = play.html;
+            // alert("Error: user ID not found.");
+            // window.location.href = play.html;
         }
         heartsLeft--;
         updateHeart(heartsLeft);
         document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
     }
 
-    if (heartsLeft === 0 && !timerInterval) {
+    if (heartsLeft === 0) {
         resetTimer(); 
-        sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
-        updateTimerDisplay();
+        // sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
+        // updateTimerDisplay();
         timerInterval = setInterval(decrementTimer, 1000);  // Update the timer every second
     }
 }
-
-// Play button event listener
-document.getElementById('playButton').addEventListener('click', function () {
-    startGame();
-});
 
 function resetHearts() {
     heartsLeft = 3;
@@ -83,9 +78,9 @@ function resetHearts() {
 
 function resetTimer() {
     clearInterval(timerInterval);
-    timerhours = 4;
-    timerMinutes = 59;
-    timerSeconds = 59;
+    timerhours = 0;
+    timerMinutes = 0;
+    timerSeconds = 3;
     timerInterval = null;
 
     sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
@@ -94,7 +89,7 @@ function resetTimer() {
 
 async function fetchUserInfo() {
     if (!user_id) {
-        alert("User ID is missing.");
+        // alert("User ID is missing.");
         return;
     }
     try {
@@ -112,13 +107,13 @@ async function fetchUserInfo() {
                 document.getElementById('totalScore').innerText = "Total score: " + data.data.score;
                 updateTimerDisplay();
             } else {
-                alert('User not found');
+                // alert('User not found');
             }
         } else {
-            alert('Failed to fetch user info');
+            // alert('Failed to fetch user info');
         }
     } catch (error) {
-        alert('Error: ' + error.message);
+        // alert('Error: ' + error.message);
     }
 }
 
@@ -140,10 +135,10 @@ function sendTimerToDatabase(timerInSeconds) {
     })
     .then(response => response.json())
     .then(data => {
-        alert('timer updated successfully: ' + JSON.stringify(data));
+        // alert('timer updated successfully: ' + JSON.stringify(data));
     })
     .catch(error => {
-        alert('Error update timer: ' + error.message);
+        // alert('Error update timer: ' + error.message);
     });
 }
 
@@ -160,12 +155,17 @@ function updateHeart(heartsLeft) {
     })
     .then(response => response.json())
     .then(data => {
-        alert('heart updated successfully: ' + JSON.stringify(data));
+        // alert('heart updated successfully: ' + JSON.stringify(data));
     })
     .catch(error => {
-        alert('Error update heart: ' + error.message);
+        // alert('Error update heart: ' + error.message);
     });
 }
 
 window.onload = fetchUserInfo;
-setTimeout(resetHearts, 5 * 60 * 60 * 1000); // Reset after 5 hours
+// setTimeout(resetHearts, 3 * 1000); // Reset after 5 hours
+
+// Play button event listener
+document.getElementById('playButton').addEventListener('click', function () {
+    startGame();
+});
