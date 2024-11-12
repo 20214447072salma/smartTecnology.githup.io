@@ -63,7 +63,7 @@ function startGame() {
         document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
     }
 
-    if (data.data.timer >= data.data.next) {
+    if (heartsLeft === 0) {
         resetHearts(); 
         const newEndTime = new Date(Date.now() + 1 * 60 * 1000);
         data.data.next = newEndTime
@@ -170,5 +170,5 @@ document.getElementById('playButton').addEventListener('click', function () {
     const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
     sendTimerToDatabase(remainingTimeInSeconds);
 
-    // fetchUserInfo();
+    fetchUserInfo();
 });
