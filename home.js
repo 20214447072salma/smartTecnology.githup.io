@@ -64,9 +64,9 @@ function startGame() {
 
     if (heartsLeft === 0) {
         resetTimer(); 
-        // sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
-        // updateTimerDisplay();
         timerInterval = setInterval(decrementTimer, 1000);  // Update the timer every second
+        sendNextToDatabase();
+        
     }
 }
 
@@ -97,6 +97,7 @@ async function fetchUserInfo() {
         if (response.ok) {
             const data = await response.json();
             if (data.status === 'success') {
+                const next = data.data.next;
                 heartsLeft = data.data.heart;
                 const totalSeconds = data.data.timer;
                 timerhours = Math.floor(totalSeconds / 3600);
@@ -106,6 +107,8 @@ async function fetchUserInfo() {
                 document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
                 document.getElementById('totalScore').innerText = "Total score: " + data.data.score;
                 updateTimerDisplay();
+
+                sendTimerToDatabase(imerhours * 3600 + timerMinutes * 60 + timerSeconds, next);
             } else {
                 // alert('User not found');
             }
@@ -117,7 +120,7 @@ async function fetchUserInfo() {
     }
 }
 
-function sendTimerToDatabase(timerInSeconds) {
+function sendTimerToDatabase(timerInSeconds, next) {
     const hours = Math.floor(timerInSeconds / 3600);
     const minutes = Math.floor((timerInSeconds % 3600) / 60);
     const seconds = timerInSeconds % 60;
@@ -130,7 +133,8 @@ function sendTimerToDatabase(timerInSeconds) {
         },
         body: JSON.stringify({
             user_id: user_id,
-            timer: timerFormatted
+            timer: timerFormatted, 
+            next: next
         })
     })
     .then(response => response.json())
@@ -141,6 +145,36 @@ function sendTimerToDatabase(timerInSeconds) {
         // alert('Error update timer: ' + error.message);
     });
 }
+
+function sendNextToDatabase() {
+    const nextEndTime = new Date(Date.now() + 1 * 60 * 1000); // Adjust time as needed
+    const totalSeconds = Math.floor((nextEndTime - Date.now()) / 1000); // Calculate in seconds
+
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    const timerFormatted = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+
+    fetch('http://127.0.0.1:8081/update_timer', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user_id: user_id,
+            next: nextEndTime.toISOString() // Store next as a timestamp
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Next timer updated successfully:', data);
+    })
+    .catch(error => {
+        console.error('Error updating next timer:', error.message);
+    });
+}
+
 
 function updateHeart(heartsLeft) {
     fetch('http://127.0.0.1:8081/update_heart', {
