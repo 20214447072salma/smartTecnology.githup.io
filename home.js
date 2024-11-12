@@ -38,8 +38,7 @@ async function decrementTimer() {
 
     if (timerSeconds === 0 && timerMinutes % 1 === 0) {
         const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
-        const { next } = await fetchUserInfo(); // fetch `next` here
-        sendTimerToDatabase(remainingTimeInSeconds, next);
+        sendTimerToDatabase(remainingTimeInSeconds);
     }
 }
 
@@ -112,7 +111,7 @@ async function fetchUserInfo() {
                 document.getElementById('totalScore').innerText = "Total score: " + data.data.score;
                 updateTimerDisplay();
 
-                sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds, next);
+                sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
             } else {
                 // alert('User not found');
             }
@@ -124,13 +123,13 @@ async function fetchUserInfo() {
     }
 }
 
-function sendTimerToDatabase(timerInSeconds, next) {
+function sendTimerToDatabase(timerInSeconds) {
+
     const hours = Math.floor(timerInSeconds / 3600);
     const minutes = Math.floor((timerInSeconds % 3600) / 60);
     const seconds = timerInSeconds % 60;
+    
     const timerFormatted = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
-    const data = response.json();
-    next = data.data.next
 
     fetch('http://127.0.0.1:8081/update_timer', {
         method: 'POST',
@@ -140,7 +139,6 @@ function sendTimerToDatabase(timerInSeconds, next) {
         body: JSON.stringify({
             user_id: user_id,
             timer: timerFormatted, 
-            next: next
         })
     })
     .then(response => response.json())
@@ -169,7 +167,7 @@ function sendNextToDatabase() {
         },
         body: JSON.stringify({
             user_id: user_id,
-            next: nextEndTime.toISOString() // Store next as a timestamp
+            next: timerFormatted
         })
     })
     .then(response => response.json())
@@ -211,8 +209,7 @@ document.getElementById('playButton').addEventListener('click', async function (
     startGame();
 
     const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
-    const { next } = await fetchUserInfo(); // Get `next` once
-    sendTimerToDatabase(remainingTimeInSeconds, next);
+    sendTimerToDatabase(remainingTimeInSeconds);
     updateTimerDisplay();
 
     await fetchUserInfo();
