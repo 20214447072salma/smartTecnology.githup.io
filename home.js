@@ -63,7 +63,20 @@ async function startGame() {
     }
 
     const response = await fetchUserInfo();  // Ensure you get the latest `next` value from the database
-    const nextTime = new Date(response.data.timer).getTime();  // Convert `next` time to milliseconds
+    let nextTime;
+    if (response && response.data && response.data.next) {
+        nextTime = new Date(response.data.next).getTime();
+        
+        // Check if `nextTime` is valid (not NaN)
+        if (isNaN(nextTime)) {
+            alert("Invalid `next` time format:", response.data.next);
+            return;  // Exit if `next` is invalid
+        }
+    } else {
+        alert("`next` time is missing or invalid.");
+        return;
+    }
+
     alert(nextTime)
     const currentTime = Date.now();  // Current time in milliseconds
 
