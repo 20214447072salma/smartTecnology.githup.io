@@ -102,23 +102,22 @@ async function fetchUserInfo() {
         if (response.ok) {
             const data = await response.json();
             if (data.status === 'success') {
-                const next = data.data.next;
+
                 heartsLeft = data.data.heart;
                 const totalSeconds = data.data.timer;
                 timerhours = Math.floor(totalSeconds / 3600);
                 timerMinutes = Math.floor((totalSeconds % 3600) / 60);
                 timerSeconds = totalSeconds % 60;
 
-                // hours = Math.floor(next / 3600);
-                // Minutes = Math.floor((next % 3600) / 60);
-                // Seconds = next % 60;
-
-
                 document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
                 document.getElementById('totalScore').innerText = "Total score: " + data.data.score;
                 updateTimerDisplay();
 
-                // sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
+                const next = data.data.next;
+                hours = Math.floor(next / 3600);
+                Minutes = Math.floor((next % 3600) / 60);
+                Seconds = next % 60;
+
             } else {
                 // alert('User not found');
             }
