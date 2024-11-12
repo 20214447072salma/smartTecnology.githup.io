@@ -64,6 +64,7 @@ async function startGame() {
 
     const response = await fetchUserInfo();  // Ensure you get the latest `next` value from the database
     const nextTime = new Date(response.data.next).getTime();  // Convert `next` time to milliseconds
+    alert(nextTime)
     const currentTime = Date.now();  // Current time in milliseconds
 
     if (currentTime >= nextTime) {
@@ -108,9 +109,9 @@ async function fetchUserInfo() {
                 timerMinutes = Math.floor((totalSeconds % 3600) / 60);
                 timerSeconds = totalSeconds % 60;
 
-                timerhours = Math.floor(next / 3600);
-                timerMinutes = Math.floor((next % 3600) / 60);
-                timerSeconds = next % 60;
+                // hours = Math.floor(next / 3600);
+                // Minutes = Math.floor((next % 3600) / 60);
+                // Seconds = next % 60;
 
 
                 document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
