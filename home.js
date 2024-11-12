@@ -63,7 +63,7 @@ async function startGame() {
     }
 
     const response = await fetchUserInfo();  // Ensure you get the latest `next` value from the database
-    const nextTime = new Date(response.data.next).getTime();  // Convert `next` time to milliseconds
+    const nextTime = new Date(response.data.timer).getTime();  // Convert `next` time to milliseconds
     alert(nextTime)
     const currentTime = Date.now();  // Current time in milliseconds
 
