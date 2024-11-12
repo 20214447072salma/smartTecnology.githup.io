@@ -62,28 +62,26 @@ async function startGame() {
         document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
     }
 
-    const response = await fetchUserInfo();  // Ensure you get the latest `next` value from the database
-    let nextTime;
-    if (response && response.data && response.data.next) {
-        nextTime = new Date(response.data.next).getTime();
-        
-        // Check if `nextTime` is valid (not NaN)
+    const userInfo = await fetchUserInfo();
+
+    if (userInfo && userInfo.next) {
+        const nextTime = new Date(userInfo.next).getTime();
+
         if (isNaN(nextTime)) {
-            alert("Invalid `next` time format:", response.data.next);
-            return;  // Exit if `next` is invalid
+            alert("Invalid `next` time format:", userInfo.next);
+            return;
+        }
+
+        const currentTime = Date.now();
+
+        if (currentTime >= nextTime) {
+            // If the current time is past `next`, start a new countdown
+            resetHearts();
+            // timerInterval = setInterval(decrementTimer, 1000);
+            sendNextToDatabase();
         }
     } else {
-        alert("`next` time is missing or invalid.");
-        return;
-    }
-
-    alert(nextTime)
-    const currentTime = Date.now();  // Current time in milliseconds
-
-    if (currentTime >= nextTime) {
-        // Condition to start a new 8-hour countdown if the current time is past the next time
-        resetHearts(); 
-        sendNextToDatabase();  // Set the next 8-hour time in the database
+        alrt("`next` time is missing or invalid.");
     }
 }
 
@@ -130,6 +128,8 @@ async function fetchUserInfo() {
                 hours = Math.floor(next / 3600);
                 Minutes = Math.floor((next % 3600) / 60);
                 Seconds = next % 60;
+
+                return data.data;
 
             } else {
                 // alert('User not found');
