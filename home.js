@@ -170,5 +170,5 @@ document.getElementById('playButton').addEventListener('click', function () {
     const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
     sendTimerToDatabase(remainingTimeInSeconds);
 
-    fetchUserInfo();
+    // fetchUserInfo();
 });
