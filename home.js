@@ -18,29 +18,29 @@ function updateTimerDisplay() {
     document.getElementById('timer').innerText = `${formatTime(timerhours)}:${formatTime(timerMinutes)}:${formatTime(timerSeconds)}`;
 }
 
-async function decrementTimer() {
-    if (timerSeconds > 0) {
-        timerSeconds--;
-    } else if (timerMinutes > 0) {
-        timerMinutes--;
-        timerSeconds = 59;
-    } else if (timerhours > 0) {
-        timerhours--;
-        timerMinutes = 59;
-        timerSeconds = 59;
-    } else {
-        clearInterval(timerInterval);
-        alert("Time is up! You can play again with three hearts.");
-        resetHearts();
-    }
+// async function decrementTimer() {
+//     if (timerSeconds > 0) {
+//         timerSeconds--;
+//     } else if (timerMinutes > 0) {
+//         timerMinutes--;
+//         timerSeconds = 59;
+//     } else if (timerhours > 0) {
+//         timerhours--;
+//         timerMinutes = 59;
+//         timerSeconds = 59;
+//     } else {
+//         clearInterval(timerInterval);
+//         alert("Time is up! You can play again with three hearts.");
+//         resetHearts();
+//     }
 
-    updateTimerDisplay();
+//     updateTimerDisplay();
 
-    if (timerSeconds === 0 && timerMinutes % 1 === 0) {
-        const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
-        sendTimerToDatabase(remainingTimeInSeconds);
-    }
-}
+//     if (timerSeconds === 0 && timerMinutes % 1 === 0) {
+//         const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
+//         sendTimerToDatabase(remainingTimeInSeconds);
+//     }
+// }
 
 
 function formatTime(unit) {
@@ -72,17 +72,17 @@ async function startGame() {
             return;
         }
 
-        const currentTime = Date.now();
-        alert(currentTime);
+        // Convert nextTime to milliseconds from now
+        const nextTimeInMillis = Date.now() + (nextTime * 1000); // Assuming `nextTime` is the countdown in seconds
 
-        if (currentTime >= nextTime) {
-            // If the current time is past `next`, start a new countdown
-            resetHearts();
-            // timerInterval = setInterval(decrementTimer, 1000);
+        // Get the current time
+        const currentTime = Date.now();
+
+        // Now you can make your comparison
+        if (currentTime >= nextTimeInMillis) {
+            resetTimer(); 
             sendNextToDatabase();
         }
-    } else {
-        alrt("`next` time is missing or invalid.");
     }
 }
 
