@@ -18,7 +18,7 @@ function updateTimerDisplay() {
     document.getElementById('timer').innerText = `${formatTime(timerhours)}:${formatTime(timerMinutes)}:${formatTime(timerSeconds)}`;
 }
 
-function decrementTimer() {
+async function decrementTimer() {
     if (timerSeconds > 0) {
         timerSeconds--;
     } else if (timerMinutes > 0) {
@@ -36,12 +36,13 @@ function decrementTimer() {
 
     updateTimerDisplay();
 
-    // Update timer in database every 60 seconds
-    if (timerSeconds % 60 === 0) {
+    if (timerSeconds === 0 && timerMinutes % 1 === 0) {
         const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
-        sendTimerToDatabase(remainingTimeInSeconds);
+        const { next } = await fetchUserInfo(); // fetch `next` here
+        sendTimerToDatabase(remainingTimeInSeconds, next);
     }
 }
+
 
 function formatTime(unit) {
     return unit < 10 ? `0${unit}` : unit;
@@ -83,7 +84,10 @@ function resetTimer() {
     timerSeconds = 0;
     timerInterval = null;
 
-    sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
+    const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
+    fetchUserInfo().then(() => {
+        sendTimerToDatabase(remainingTimeInSeconds, data.data.next); // Pass updated `next`
+    });
     updateTimerDisplay();
 }
 
@@ -108,7 +112,7 @@ async function fetchUserInfo() {
                 document.getElementById('totalScore').innerText = "Total score: " + data.data.score;
                 updateTimerDisplay();
 
-                sendTimerToDatabase(imerhours * 3600 + timerMinutes * 60 + timerSeconds, next);
+                sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds, next);
             } else {
                 // alert('User not found');
             }
@@ -200,10 +204,12 @@ window.onload = fetchUserInfo;
 // setTimeout(resetHearts, 3 * 1000); // Reset after 5 hours
 
 // Play button event listener
-document.getElementById('playButton').addEventListener('click', function () {
+document.getElementById('playButton').addEventListener('click', async function () {
+    await fetchUserInfo();
     startGame();
 
     const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
-    sendTimerToDatabase(remainingTimeInSeconds);
+    const { next } = await fetchUserInfo(); // Get `next` once
+    sendTimerToDatabase(remainingTimeInSeconds, next);
     updateTimerDisplay();
 });
