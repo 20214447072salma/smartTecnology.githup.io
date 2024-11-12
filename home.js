@@ -47,7 +47,7 @@ function formatTime(unit) {
     return unit < 10 ? `0${unit}` : unit;
 }
 
-function startGame() {
+async function startGame() {
     if (heartsLeft > 0) {
         if (user_id) {
             // Redirect to play.html with the user_id
@@ -62,11 +62,14 @@ function startGame() {
         document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
     }
 
-    if (heartsLeft === 0) {
-        resetTimer(); 
-        timerInterval = setInterval(decrementTimer, 1000);  // Update the timer every second
-        sendNextToDatabase();
-        
+    const response = await fetchUserInfo();  // Ensure you get the latest `next` value from the database
+    const nextTime = new Date(response.data.next).getTime();  // Convert `next` time to milliseconds
+    const currentTime = Date.now();  // Current time in milliseconds
+
+    if (currentTime >= nextTime) {
+        // Condition to start a new 8-hour countdown if the current time is past the next time
+        resetHearts(); 
+        sendNextToDatabase();  // Set the next 8-hour time in the database
     }
 }
 
@@ -84,9 +87,7 @@ function resetTimer() {
     timerInterval = null;
 
     const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
-    fetchUserInfo().then(() => {
-        sendTimerToDatabase(remainingTimeInSeconds, data.data.next); // Pass updated `next`
-    });
+    sendTimerToDatabase(remainingTimeInSeconds); // Pass updated `next`
     updateTimerDisplay();
 }
 
@@ -107,11 +108,16 @@ async function fetchUserInfo() {
                 timerMinutes = Math.floor((totalSeconds % 3600) / 60);
                 timerSeconds = totalSeconds % 60;
 
+                timerhours = Math.floor(next / 3600);
+                timerMinutes = Math.floor((next % 3600) / 60);
+                timerSeconds = next % 60;
+
+
                 document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
                 document.getElementById('totalScore').innerText = "Total score: " + data.data.score;
                 updateTimerDisplay();
 
-                sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
+                // sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
             } else {
                 // alert('User not found');
             }
@@ -206,7 +212,9 @@ window.onload = fetchUserInfo;
 // Play button event listener
 document.getElementById('playButton').addEventListener('click', async function () {
     
-    startGame();
+    await startGame();
+
+    await fetchUserInfo();
 
     const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
     sendTimerToDatabase(remainingTimeInSeconds);
