@@ -130,7 +130,8 @@ function sendTimerToDatabase(timerInSeconds) {
         },
         body: JSON.stringify({
             user_id: user_id,
-            timer: timerFormatted
+            timer: timerFormatted, 
+            next: timerFormatted
         })
     })
     .then(response => response.json())
