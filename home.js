@@ -129,6 +129,8 @@ function sendTimerToDatabase(timerInSeconds, next) {
     const minutes = Math.floor((timerInSeconds % 3600) / 60);
     const seconds = timerInSeconds % 60;
     const timerFormatted = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    const data = response.json();
+    next = data.data.next
 
     fetch('http://127.0.0.1:8081/update_timer', {
         method: 'POST',
