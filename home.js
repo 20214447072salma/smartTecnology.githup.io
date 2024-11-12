@@ -207,11 +207,13 @@ window.onload = fetchUserInfo;
 
 // Play button event listener
 document.getElementById('playButton').addEventListener('click', async function () {
-    await fetchUserInfo();
+    
     startGame();
 
     const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
     const { next } = await fetchUserInfo(); // Get `next` once
     sendTimerToDatabase(remainingTimeInSeconds, next);
     updateTimerDisplay();
+
+    await fetchUserInfo();
 });
