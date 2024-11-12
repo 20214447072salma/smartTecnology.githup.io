@@ -10,8 +10,8 @@ list.forEach((item) => item.addEventListener('click', activeLink));
 
 let heartsLeft = 3;
 let timerhours = 0;
-let timerMinutes = 0;
-let timerSeconds = 3;
+let timerMinutes = 1;
+let timerSeconds = 0;
 let timerInterval;
 
 function updateTimerDisplay() {
@@ -79,8 +79,8 @@ function resetHearts() {
 function resetTimer() {
     clearInterval(timerInterval);
     timerhours = 0;
-    timerMinutes = 0;
-    timerSeconds = 3;
+    timerMinutes = 1;
+    timerSeconds = 0;
     timerInterval = null;
 
     sendTimerToDatabase(timerhours * 3600 + timerMinutes * 60 + timerSeconds);
@@ -163,9 +163,10 @@ function updateHeart(heartsLeft) {
 }
 
 window.onload = fetchUserInfo;
-// setTimeout(resetHearts, 3 * 1000); // Reset after 5 hours
 
 // Play button event listener
 document.getElementById('playButton').addEventListener('click', function () {
     startGame();
+    const remainingTimeInSeconds = timerhours * 3600 + timerMinutes * 60 + timerSeconds;
+    sendTimerToDatabase(remainingTimeInSeconds);
 });
