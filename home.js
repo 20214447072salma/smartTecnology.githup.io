@@ -160,7 +160,7 @@ function sendNextToDatabase() {
 
     const timerFormatted = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
 
-    fetch('http://127.0.0.1:8081/update_timer', {
+    fetch('http://127.0.0.1:8081/update_next', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
