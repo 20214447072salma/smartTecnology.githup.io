@@ -84,6 +84,8 @@ async function startGame() {
             resetHearts(); 
             sendNextToDatabase();
             alert("Done :D")
+        } else {
+            alert("wait till timer finish");
         }
     }
 }
