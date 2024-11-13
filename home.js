@@ -67,19 +67,18 @@ async function startGame() {
     if (userInfo && userInfo.next) {
         const nextTime = new Date(userInfo.next).getTime();
         // const current = new Date(userInfo.timer).getTime();
+        alert(nextTime);
         if (isNaN(nextTime)) {
             alert("Invalid `next` time format:", userInfo.next);
             return;
         }
 
-        // Convert nextTime to milliseconds from now
-        const nextTimeInMillis = Date.now() + (nextTime * 60 * 1000); // Assuming `nextTime` is the countdown in seconds
-        alert(formatToHHMMSS(nextTimeInMillis));
+        alert(formatToHHMMSS(nextTime));
         // Get the current time
 
         
         // Now you can make your comparison
-        if (getCurrentTimeHHMMSS() >= formatToHHMMSS(nextTimeInMillis)) {
+        if (getCurrentTimeHHMMSS() >= formatToHHMMSS(nextTime)) {
             resetTimer(); 
             sendNextToDatabase();
         }
