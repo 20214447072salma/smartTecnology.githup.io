@@ -79,7 +79,6 @@ async function startGame() {
         const currentTime = Date.now();
         alert(formatToHHMMSS(currentTime));
         
-        alert(currentTime);
         // Now you can make your comparison
         if (formatToHHMMSS(currentTime) >= formatToHHMMSS(nextTimeInMillis)) {
             resetTimer(); 
