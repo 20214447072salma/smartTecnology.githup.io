@@ -197,8 +197,8 @@ function sendTimerToDatabase(timerInSeconds) {
 }
 
 function sendNextToDatabase() {
-    const nextEndTime = new Date(Date.now() + 1 * 60 * 1000); // Adjust time as needed
-    const totalSeconds = Math.floor((nextEndTime - Date.now()) / 1000); // Calculate in seconds
+    // const nextEndTime = new Date(Date.now() + 1 * 60 * 1000); // Adjust time as needed
+    // const totalSeconds = Math.floor((nextEndTime - Date.now()) / 1000); // Calculate in seconds
 
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
