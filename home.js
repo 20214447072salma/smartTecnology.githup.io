@@ -198,14 +198,19 @@ function sendTimerToDatabase(timerInSeconds) {
 }
 
 function sendNextToDatabase() {
-    // const nextEndTime = new Date(Date.now() + 1 * 60 * 1000); // Adjust time as needed
-    // const totalSeconds = Math.floor((nextEndTime - Date.now()) / 1000); // Calculate in seconds
 
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
+    const now = new Date();
+
+    // Add 1 minute to the current time
+    const futureTime = new Date(now.getTime() + 1 * 60 * 1000);  // 1 minute = 60 seconds * 1000 ms
+
+    // Format as HH:MM:SS
+    const hours = futureTime.getHours().toString().padStart(2, '0');
+    const minutes = futureTime.getMinutes().toString().padStart(2, '0');
+    const seconds = futureTime.getSeconds().toString().padStart(2, '0');
 
     const timerFormatted = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    alert(timerFormatted);
 
     fetch('http://127.0.0.1:8081/update_next', {
         method: 'POST',
