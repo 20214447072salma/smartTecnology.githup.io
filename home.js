@@ -65,8 +65,10 @@ async function startGame() {
     const userInfo = await fetchUserInfo();
 
     if (userInfo && userInfo.next) {
-        const nextTime = new Date(userInfo.next).getTime();
-        // const current = new Date(userInfo.timer).getTime();
+        const next = userInfo.next; // e.g., "08:00:00"
+        const nextDateTimeString = `${next}`; // "YYYY-MM-DDTHH:MM:SS"
+        const nextTime = new Date(nextDateTimeString).getTime();
+
         alert(nextTime);
         if (isNaN(nextTime)) {
             alert("Invalid `next` time format:", userInfo.next);
@@ -209,7 +211,7 @@ function sendNextToDatabase() {
     const minutes = futureTime.getMinutes().toString().padStart(2, '0');
     const seconds = futureTime.getSeconds().toString().padStart(2, '0');
 
-    const timerFormatted = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    const timerFormatted = `${hours}:${minutes}:${seconds}`;
     alert(timerFormatted);
 
     fetch('http://127.0.0.1:8081/update_next', {
