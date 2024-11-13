@@ -74,16 +74,32 @@ async function startGame() {
 
         // Convert nextTime to milliseconds from now
         const nextTimeInMillis = Date.now() + (nextTime * 1000); // Assuming `nextTime` is the countdown in seconds
-
+        alert(formatToHHMMSS(nextTimeInMillis));
         // Get the current time
         const currentTime = Date.now();
-
+        alert(formatToHHMMSS(currentTime));
+        
+        alert(currentTime);
         // Now you can make your comparison
-        if (currentTime >= nextTimeInMillis) {
+        if (formatToHHMMSS(currentTime) >= formatToHHMMSS(nextTimeInMillis)) {
             resetTimer(); 
             sendNextToDatabase();
         }
     }
+}
+
+function formatToHHMMSS(milliseconds) {
+    const totalSeconds = Math.floor(milliseconds / 1000); // Convert to seconds
+    const hours = Math.floor(totalSeconds / 3600) % 24; // Limit hours to a single day (0-23)
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    // Format each unit to ensure two digits (e.g., 09 instead of 9)
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    const formattedSeconds = seconds.toString().padStart(2, '0');
+
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
 function resetHearts() {
