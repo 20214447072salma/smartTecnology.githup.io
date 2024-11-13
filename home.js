@@ -79,8 +79,9 @@ async function startGame() {
         
         // Now you can make your comparison
         if (getCurrentTimeHHMMSS() >= formatToHHMMSS(nextTime)) {
-            resetTimer(); 
+            resetHearts(); 
             sendNextToDatabase();
+            alert("Done :D")
         }
     }
 }
