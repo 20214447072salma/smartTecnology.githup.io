@@ -51,11 +51,11 @@ async function startGame() {
     if (heartsLeft > 0) {
         if (user_id) {
             // Redirect to play.html with the user_id
-            // window.location.href = `play.html?user_id=${user_id}`;
-            // alert("found");
+            window.location.href = `play.html?user_id=${user_id}`;
+            alert("found");
         } else {
-            // alert("Error: user ID not found.");
-            // window.location.href = play.html;
+            alert("Error: user ID not found.");
+            window.location.href = play.html;
         }
         heartsLeft--;
         updateHeart(heartsLeft);
@@ -66,7 +66,7 @@ async function startGame() {
 
     if (userInfo && userInfo.next) {
         const next = userInfo.next; // e.g., "08:00:00"
-        const nextDateTimeString = `${next}`; // "YYYY-MM-DDTHH:MM:SS"
+        const nextDateTimeString = `${next}`; // "HH:MM:SS"
         const nextTime = new Date(nextDateTimeString).getTime();
 
         alert(nextTime);
@@ -85,7 +85,7 @@ async function startGame() {
             sendNextToDatabase();
             alert("Done :D")
         } else {
-            alert("wait till timer finish");
+            alert("wait timer to finish")
         }
     }
 }
@@ -103,18 +103,12 @@ function getCurrentTimeHHMMSS() {
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
-function formatToHHMMSS(milliseconds) {
-    const totalSeconds = Math.floor(milliseconds / 1000); // Convert to seconds
-    const hours = Math.floor(totalSeconds / 3600) % 24; // Limit hours to a single day (0-23)
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
+function formatToHHMMSS(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
 
-    // Format each unit to ensure two digits (e.g., 09 instead of 9)
-    const formattedHours = hours.toString().padStart(2, '0');
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-    const formattedSeconds = seconds.toString().padStart(2, '0');
-
-    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
 function resetHearts() {
@@ -137,52 +131,45 @@ function resetTimer() {
 
 async function fetchUserInfo() {
     if (!user_id) {
-        // alert("User ID is missing.");
+        alert("User ID is missing.");
         return;
+    } else {
+        alert("User ID found :D");
     }
     try {
-        const response = await fetch(`http://127.0.0.1:8081/get_user_info/${user_id}`);
+        const response = await fetch(`http://127.0.0.1:5000/get_user_info/${user_id}`);
         if (response.ok) {
             const data = await response.json();
             if (data.status === 'success') {
 
-                heartsLeft = data.data.heart;
                 const totalSeconds = data.data.timer;
-                timerhours = Math.floor(totalSeconds / 3600);
-                timerMinutes = Math.floor((totalSeconds % 3600) / 60);
-                timerSeconds = totalSeconds % 60;
-
-                document.getElementById('heartStatus').innerText = `Hearts Left: ${heartsLeft}`;
-                document.getElementById('totalScore').innerText = "Total score: " + data.data.score;
-                updateTimerDisplay();
-
                 const next = data.data.next;
-                hours = Math.floor(next / 3600);
-                Minutes = Math.floor((next % 3600) / 60);
-                Seconds = next % 60;
 
+                const timerFormatted = formatToHHMMSS(totalSeconds);
+
+                document.getElementById('heartStatus').innerText = "Hearts Left: " + data.data.heart;
+                document.getElementById('totalScore').innerText = "Total score: " + data.data.score;
+                document.getElementById('timer').innerText = `Timer: ${timerFormatted}`;
+
+                alert("Done");
                 return data.data;
 
             } else {
-                // alert('User not found');
+                alert('User not found');
             }
         } else {
-            // alert('Failed to fetch user info');
+            alert('Failed to fetch user info');
         }
     } catch (error) {
-        // alert('Error: ' + error.message);
+        alert('Error: ' + error.message);
     }
 }
 
 function sendTimerToDatabase(timerInSeconds) {
-
-    const hours = Math.floor(timerInSeconds / 3600);
-    const minutes = Math.floor((timerInSeconds % 3600) / 60);
-    const seconds = timerInSeconds % 60;
     
-    const timerFormatted = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    const timerFormatted = formatToHHMMSS(timerInSeconds)
 
-    fetch('http://127.0.0.1:8081/update_timer', {
+    fetch('http://127.0.0.1:5000/update_timer', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -194,10 +181,10 @@ function sendTimerToDatabase(timerInSeconds) {
     })
     .then(response => response.json())
     .then(data => {
-        // alert('timer updated successfully: ' + JSON.stringify(data));
+        alert('timer updated successfully: ' + JSON.stringify(data));
     })
     .catch(error => {
-        // alert('Error update timer: ' + error.message);
+        alert('Error update timer: ' + error.message);
     });
 }
 
@@ -216,7 +203,7 @@ function sendNextToDatabase() {
     const timerFormatted = `${hours}:${minutes}:${seconds}`;
     alert(timerFormatted);
 
-    fetch('http://127.0.0.1:8081/update_next', {
+    fetch('http://127.0.0.1:5000/update_next', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -237,7 +224,7 @@ function sendNextToDatabase() {
 
 
 function updateHeart(heartsLeft) {
-    fetch('http://127.0.0.1:8081/update_heart', {
+    fetch('http://127.0.0.1:5000/update_heart', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -249,10 +236,10 @@ function updateHeart(heartsLeft) {
     })
     .then(response => response.json())
     .then(data => {
-        // alert('heart updated successfully: ' + JSON.stringify(data));
+        alert('heart updated successfully: ' + JSON.stringify(data));
     })
     .catch(error => {
-        // alert('Error update heart: ' + error.message);
+        alert('Error update heart: ' + error.message);
     });
 }
 
